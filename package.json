@@ -1,7 +1,7 @@
 {
   "name": "ra-feathersjs-oauth",
   "version": "0.0.1",
-  "description": "A simple wrapper around axios to work with remote API resources as though they were local",
+  "description": "A feathersjs client for react admin focusing on oauth login",
   "private": false,
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
