@@ -4,7 +4,6 @@ import { ClientTypes, FeathersClient } from '../typings/feathers-client';
 
 export default (
   apiUrl: string,
-  clientType: ClientTypes = ClientTypes.Rest,
   authOptions = {
     storageKey: 'feathers-jwt',
     storage: localStorage,
@@ -15,6 +14,7 @@ export default (
     header: 'Authorization',
     scheme: 'Bearer',
   },
+  clientType: ClientTypes = ClientTypes.Rest,
   socketIOOptions: { timeout?: number } = {},
 ) => {
   // @ts-ignore

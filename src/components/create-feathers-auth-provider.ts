@@ -5,9 +5,10 @@ import {
   AUTH_LOGIN,
   AUTH_LOGOUT,
 } from 'react-admin';
+import { FeathersClient } from '../typings/feathers-client';
 
 export default (
-  app: any,
+  app: FeathersClient,
   {
     permissionsField = 'roles',
     logoutOnForbidden = true,
@@ -41,6 +42,9 @@ export default (
 
     case AUTH_GET_PERMISSIONS:
       const { user } = await app.get('authentication');
+      if (!user) {
+        throw new Error('User is not logged in');
+      }
       return user[permissionsField];
 
     default:
