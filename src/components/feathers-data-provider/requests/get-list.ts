@@ -1,4 +1,4 @@
-import { FeathersClient, Params } from '../../../typings/feathers-client';
+import { FeathersClient, Params } from '../../../types/feathers-client';
 import generateQuery from '../utils/generate-query';
 import {
   convertListDataToReactAdminType,

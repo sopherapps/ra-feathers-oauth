@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../../../typings/feathers-client';
+import { FeathersClient } from '../../../../types/feathers-client';
 
 interface ReactDropzoneFile extends File {
   rawFile: File;

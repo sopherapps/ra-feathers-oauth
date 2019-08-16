@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../../typings/feathers-client';
+import { FeathersClient } from '../../../types/feathers-client';
 
 import generateQuery from '../utils/generate-query';
 

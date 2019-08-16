@@ -5,7 +5,7 @@ import {
   AUTH_LOGIN,
   AUTH_LOGOUT,
 } from 'react-admin';
-import { FeathersClient } from '../typings/feathers-client';
+import { FeathersClient } from '../types/feathers-client';
 
 export default (
   app: FeathersClient,

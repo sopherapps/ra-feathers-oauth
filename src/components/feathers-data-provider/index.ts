@@ -10,7 +10,7 @@ import {
   UPDATE_MANY,
 } from 'react-admin';
 
-import { FeathersClient } from '../../typings/feathers-client';
+import { FeathersClient } from '../../types/feathers-client';
 import create from './requests/create';
 import _delete from './requests/delete';
 import deleteMany from './requests/delete-many';

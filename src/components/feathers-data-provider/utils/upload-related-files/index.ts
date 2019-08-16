@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../../../typings/feathers-client';
+import { FeathersClient } from '../../../../types/feathers-client';
 import uploadFiles from './upload-files';
 import { shouldUploadFiles } from './utils';
 export * from './utils';

@@ -1,6 +1,6 @@
 import feathers, { authentication, rest, socketio } from '@feathersjs/client';
-import io from 'socket.io-client';
-import { ClientTypes, FeathersClient } from '../typings/feathers-client';
+import * as io from 'socket.io-client';
+import { ClientTypes, FeathersClient } from '../types/feathers-client';
 
 export default (
   apiUrl: string,
@@ -27,13 +27,10 @@ export default (
       app.configure(restClient.fetch(window.fetch));
       break;
 
-    case ClientTypes.Rest:
+    case ClientTypes.SocketIO:
       const socket = io(apiUrl);
       const socketIOClient = socketio(socket, socketIOOptions);
       app.configure(socketIOClient);
-      break;
-
-    default:
       break;
   }
 
