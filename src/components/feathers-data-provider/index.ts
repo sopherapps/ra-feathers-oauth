@@ -1,14 +1,14 @@
-import {
-  CREATE,
-  DELETE,
-  DELETE_MANY,
-  GET_LIST,
-  GET_MANY,
-  GET_MANY_REFERENCE,
-  GET_ONE,
-  UPDATE,
-  UPDATE_MANY,
-} from 'react-admin';
+// import {
+//   CREATE,
+//   DELETE,
+//   DELETE_MANY,
+//   GET_LIST,
+//   GET_MANY,
+//   GET_MANY_REFERENCE,
+//   GET_ONE,
+//   UPDATE,
+//   UPDATE_MANY,
+// } from 'react-admin';
 
 import { FeathersClient } from '../../types/feathers-client';
 import create from './requests/create';
@@ -28,6 +28,15 @@ interface FeathersDataProviderConfig {
   resourceUploadableFieldMap?: { [key: string]: string };
   resourcePrimaryKeyFieldMap?: { [key: string]: string };
   defaultPrimaryKeyField?: string;
+  CREATE?: string;
+  DELETE?: string;
+  DELETE_MANY?: string;
+  GET_LIST?: string;
+  GET_MANY?: string;
+  GET_MANY_REFERENCE?: string;
+  GET_ONE?: string;
+  UPDATE?: string;
+  UPDATE_MANY?: string;
 }
 
 /**
@@ -54,6 +63,15 @@ export default (
     resourceUploadableFieldMap = {},
     resourcePrimaryKeyFieldMap = {},
     defaultPrimaryKeyField = 'id',
+    CREATE = 'CREATE',
+    DELETE = 'DELETE',
+    DELETE_MANY = 'DELETE_MANY',
+    GET_LIST = 'GET_LIST',
+    GET_MANY = 'GET_MANY',
+    GET_MANY_REFERENCE = 'GET_MANY_REFERENCE',
+    GET_ONE = 'GET_ONE',
+    UPDATE = 'UPDATE',
+    UPDATE_MANY = 'UPDATE_MANY',
   }: FeathersDataProviderConfig,
 ) => {
   /**
