@@ -113,7 +113,18 @@ describe('feathers-auth-provider', () => {
   });
 
   describe('permissions', () => {
-    it("resolves with the authenticated user's permissions field", () => {});
-    it('rejects if feathersjs client is not authenticated', () => {});
+    it("resolves with the authenticated user's permissions field", async () => {
+      const user = { [authProviderOptions.permissionsField]: 'admin' };
+      feathersClient.get = jest.fn(async configName => ({ user }));
+      await expect(
+        feathersAuthProvider(AUTH_ACTIONS.AUTH_GET_PERMISSIONS, {}),
+      ).resolves.toBe(user[authProviderOptions.permissionsField]);
+    });
+    it('rejects if feathersjs client is not authenticated', async () => {
+      feathersClient.get = jest.fn(async configName => ({}));
+      await expect(
+        feathersAuthProvider(AUTH_ACTIONS.AUTH_GET_PERMISSIONS, {}),
+      ).rejects.toThrow('not logged in');
+    });
   });
 });
