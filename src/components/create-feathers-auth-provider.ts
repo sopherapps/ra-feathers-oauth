@@ -1,10 +1,10 @@
-import {
-  AUTH_CHECK,
-  AUTH_ERROR,
-  AUTH_GET_PERMISSIONS,
-  AUTH_LOGIN,
-  AUTH_LOGOUT,
-} from 'react-admin';
+// import {
+//   AUTH_CHECK,
+//   AUTH_ERROR,
+//   AUTH_GET_PERMISSIONS,
+//   AUTH_LOGIN,
+//   AUTH_LOGOUT,
+// } from 'react-admin';
 import { FeathersClient } from '../types/feathers-client';
 
 export default (
@@ -13,6 +13,11 @@ export default (
     permissionsField = 'roles',
     logoutOnForbidden = true,
     oauthStrategy = 'jwt',
+    AUTH_LOGIN = 'AUTH_LOGIN',
+    AUTH_LOGOUT = 'AUTH_LOGOUT',
+    AUTH_GET_PERMISSIONS = 'AUTH_GET_PERMISSIONS',
+    AUTH_ERROR = 'AUTH_ERROR',
+    AUTH_CHECK = 'AUTH_CHECK',
   },
 ) => async (type: any, params: any) => {
   switch (type) {
