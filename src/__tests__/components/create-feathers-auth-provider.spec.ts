@@ -76,11 +76,40 @@ describe('feathers-auth-provider', () => {
   });
 
   describe('authentication error', () => {
-    it('rejects if the error is 401 type', () => {});
-    it('rejects if the error is of 403 type', () => {});
-    it('makes the feathersjs client unauthenticated if error is 401 type', () => {});
-    it('makes the feathersjs client unauthenticated if error is 403 type', () => {});
-    it('resolves for any other type of error', () => {});
+    it('rejects if the error is 401 type', async () => {
+      await expect(
+        feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 401 }),
+      ).rejects.toThrow();
+    });
+    it('rejects if the error is of 403 type', async () => {
+      await expect(
+        feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 403 }),
+      ).rejects.toThrow();
+    });
+    it('calls the logout method of the feathersClient if error is 401 type', async () => {
+      feathersClient.logout = jest.fn();
+      try {
+        await feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 401 });
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(feathersClient.logout).toBeCalledWith();
+    });
+    it('calls the logout method of the feathersClient if error is 403 type', async () => {
+      feathersClient.logout = jest.fn();
+      try {
+        await feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 403 });
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(feathersClient.logout).toBeCalledWith();
+    });
+    it('resolves for any other type of error', async () => {
+      await expect(feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 404 }))
+        .resolves;
+      await expect(feathersAuthProvider(AUTH_ACTIONS.AUTH_ERROR, { code: 500 }))
+        .resolves;
+    });
   });
 
   describe('permissions', () => {
