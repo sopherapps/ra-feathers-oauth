@@ -1,15 +1,3 @@
-// import {
-//   CREATE,
-//   DELETE,
-//   DELETE_MANY,
-//   GET_LIST,
-//   GET_MANY,
-//   GET_MANY_REFERENCE,
-//   GET_ONE,
-//   UPDATE,
-//   UPDATE_MANY,
-// } from 'react-admin';
-
 import { FeathersClient } from '../../types/feathers-client';
 import create from './requests/create';
 import _delete from './requests/delete';
@@ -21,7 +9,7 @@ import getOne from './requests/get-one';
 import update from './requests/update';
 import updateMany from './requests/update-many';
 
-interface FeathersDataProviderConfig {
+export interface FeathersDataProviderConfig {
   uploadsUrl?: string;
   multerFieldNameSetting?: string;
   resourceUploadsForeignKeyMap?: { [key: string]: string };

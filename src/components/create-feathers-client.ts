@@ -30,11 +30,13 @@ export default (
     case ClientTypes.SocketIO:
       const socket = io(apiUrl);
       const socketIOClient = socketio(socket, socketIOOptions);
+      // @ts-ignore
       app.configure(socketIOClient);
       break;
   }
 
   // the auth client
+  // @ts-ignore
   app.configure(authentication(authOptions));
   return app;
 };

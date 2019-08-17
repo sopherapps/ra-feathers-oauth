@@ -1,10 +1,3 @@
-// import {
-//   AUTH_CHECK,
-//   AUTH_ERROR,
-//   AUTH_GET_PERMISSIONS,
-//   AUTH_LOGIN,
-//   AUTH_LOGOUT,
-// } from 'react-admin';
 import { FeathersClient } from '../types/feathers-client';
 
 export default (
