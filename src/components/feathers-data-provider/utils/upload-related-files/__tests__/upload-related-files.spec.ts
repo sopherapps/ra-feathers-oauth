@@ -1,4 +1,7 @@
-import uploadsFile from '../upload-files';
+import { FeathersClient } from '../../../../../types/feathers-client';
+import createFeathersClient from '../../../../create-feathers-client';
+import createFeathersDataProvider from '../../../index';
+import uploadFiles from '../upload-files';
 import { isUploadsResource, shouldUploadFiles } from '../utils';
 
 describe('upload-related-files', () => {
@@ -59,5 +62,61 @@ describe('upload-related-files', () => {
     });
   });
 
-  describe('upload-files', () => {});
+  describe('upload-files', () => {
+    const dataProviderOptions = {
+      uploadsUrl: 'http://localhost:3030/uploads',
+      multerFieldNameSetting: 'files',
+      resourcePrimaryKeyFieldMap: {},
+      defaultPrimaryKeyField: 'id',
+    };
+    const apiUrl = 'http://localhost:3000';
+    let feathersDataProvider: (
+      type: any,
+      resource: string,
+      params?: any,
+    ) => Promise<any>;
+    let feathersClient: FeathersClient;
+    const originalFetch = window.fetch;
+    const mockFetch = jest.fn(async (url, options) => ({
+      json: async () => ({ url, options }),
+    }));
+    const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // @ts-ignore
+      window.fetch = mockFetch;
+      feathersClient = createFeathersClient(apiUrl);
+
+      feathersClient.authentication.getAccessToken = jest.fn(
+        () => 'some-random-token',
+      );
+
+      feathersDataProvider = createFeathersDataProvider(
+        feathersClient,
+        dataProviderOptions,
+      );
+    });
+
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+
+    it('calls the getAccessToken method of feathersClient.authentication', async () => {
+      await uploadFiles(
+        feathersClient,
+        { ...dataProviderOptions, uploadsForeignKey: 'id' },
+        { ...dummyFile, rawFile: dummyFile },
+      );
+      expect(feathersClient.authentication.getAccessToken).toBeCalled();
+    });
+
+    it('creates a formData object and appends the file obejcts to it', () => {});
+    it('POSTs to the uploadsUrl the formData with an Authorization header\
+    having the access token of the current user', () => {});
+    it('returns the an array of the foreignKeys of the uploaded files\
+    if an array of files was passed to it', () => {});
+    it('returns a forerignKey of the uploaded file\
+    if a single file was passed to it', () => {});
+  });
 });

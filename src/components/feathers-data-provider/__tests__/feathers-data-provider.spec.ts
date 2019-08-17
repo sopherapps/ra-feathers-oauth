@@ -1,6 +1,6 @@
-import createFeathersDataProvider from '..';
 import { FeathersClient } from '../../../types/feathers-client';
 import createFeathersClient from '../../create-feathers-client';
+import createFeathersDataProvider from '../index';
 import {
   convertListDataToReactAdminType,
   convertSingleDatumToReactAdminType,
