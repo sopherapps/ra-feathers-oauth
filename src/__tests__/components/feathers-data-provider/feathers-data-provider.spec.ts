@@ -155,9 +155,7 @@ describe('feathers-data-provider', () => {
   describe('type: GET_ONE', () => {
     const params = { id: 2 };
     it('outputs {data: feathersjsClient.service(resource).get(params.id)}', async () => {
-      feathersClient.service(resource).get = jest.fn(async (data: any) => [
-        data,
-      ]);
+      feathersClient.service(resource).get = jest.fn(async (data: any) => data);
       const response = await feathersDataProvider(
         DATA_PROVIDER_ACTIONS.GET_ONE,
         resource,
@@ -221,7 +219,26 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE', () => {
-    it('outputs {data: feathersjsClient.service(resource).patch(params.id, data)}', () => {});
+    const params = { id: 5, data: { name: 'John Doe' } };
+    it('outputs {data: feathersjsClient.service(resource).patch(params.id, params.data)}', async () => {
+      feathersClient.service(resource).patch = jest.fn(
+        async (id: any, data: any) => ({ id, data }),
+      );
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.UPDATE,
+        resource,
+        params,
+      );
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .patch(params.id, params.data);
+      expect(response).toMatchObject(
+        convertSingleDatumToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
     describe('uploads', () => {
       it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
 
