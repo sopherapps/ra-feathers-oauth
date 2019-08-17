@@ -26,11 +26,18 @@ describe('feathers-data-provider', () => {
     UPDATE_MANY: 'UPDATE_MANY',
   };
   const resource = 'churches';
+  const uploadsResource = 'uploads';
   const dataProviderOptions = {
-    uploadsUrl: 'http://localhost:3030/uploads',
+    uploadsUrl: `http://localhost:3030/${uploadsResource}`,
     multerFieldNameSetting: 'files',
-    resourceUploadsForeignKeyMap: { [resource]: 'url' },
-    resourceUploadableFieldMap: { [resource]: 'logo' },
+    resourceUploadsForeignKeyMap: {
+      [resource]: 'name',
+      [uploadsResource]: 'name',
+    },
+    resourceUploadableFieldMap: {
+      [resource]: 'logo',
+      [uploadsResource]: 'uploadName',
+    },
     resourcePrimaryKeyFieldMap: {},
     defaultPrimaryKeyField: 'id',
     ...DATA_PROVIDER_ACTIONS,
@@ -45,7 +52,7 @@ describe('feathers-data-provider', () => {
   let feathersClient: FeathersClient;
   const originalFetch = window.fetch;
   const mockFetch = jest.fn(async (url, options) => ({
-    json: async () => ({ url, options }),
+    json: async () => options.body && Array.from(options.body.values()),
   }));
 
   beforeEach(() => {
@@ -219,11 +226,23 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE', () => {
-    const params = { id: 5, data: { name: 'John Doe', logo: { rawFile: {} } } };
-    it('outputs {data: feathersjsClient.service(resource).patch(params.id, params.data)}', async () => {
+    const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
+    const file = { ...dummyFile, rawFile: dummyFile };
+
+    beforeEach(() => {
       feathersClient.service(resource).patch = jest.fn(
-        async (id: any, data: any) => ({ id, data }),
+        async (id: any, data: any) => data,
       );
+    });
+
+    it('outputs {data: feathersjsClient.service(resource).patch(params.id, params.data)}\
+     with uploadable field updated to the foreignKey of the uploaded file', async () => {
+      const params = {
+        id: 5,
+        data: { name: 'John Doe', logo: file },
+      };
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
       const response = await feathersDataProvider(
         DATA_PROVIDER_ACTIONS.UPDATE,
         resource,
@@ -234,27 +253,27 @@ describe('feathers-data-provider', () => {
         .patch(params.id, params.data);
       expect(response).toMatchObject(
         convertSingleDatumToReactAdminType(
-          expectedResponse,
+          { ...expectedResponse, [uploadableField]: file.rawFile.name },
           dataProviderOptions.defaultPrimaryKeyField,
         ),
       );
     });
     describe('uploads', () => {
-      it('makes a POST to the uploadsUrl in case the resource has an uploadable field', async () => {
-        expect(mockFetch).toBeCalledWith(
-          dataProviderOptions.uploadsUrl,
-          expect.objectContaining({
-            method: 'POST',
-            headers: expect.objectContaining({}),
-          }),
-        );
+      it('throws error if the resource is the same as the one on the uploadsUrl', async () => {
+        const params = {
+          id: 5,
+          data: { title: 'John Doe Photo', uploadsName: file },
+        };
+        const uploadableField =
+          dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
+        await expect(
+          feathersDataProvider(
+            DATA_PROVIDER_ACTIONS.UPDATE,
+            uploadsResource,
+            params,
+          ),
+        ).rejects.toThrow('editting');
       });
-
-      it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', () => {});
-
-      // eslint-disable-next-line no-multi-str
-      it('updates the data to include the output from the POST to the uploadsUrl\
-      if resource is not the upload resource', () => {});
     });
   });
 
@@ -277,11 +296,28 @@ describe('feathers-data-provider', () => {
     describe('uploads', () => {
       it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
 
-      it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', () => {});
-
-      // eslint-disable-next-line no-multi-str
-      it('updates the data to include the output from the POST to the uploadsUrl\
-      if resource is not the upload resource', () => {});
+      it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', async () => {
+        // const params = {
+        //   id: 5,
+        //   data: { title: 'John Doe Photo', uploadsName: file },
+        // };
+        // const uploadableField =
+        //   dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
+        // const response = await feathersDataProvider(
+        //   DATA_PROVIDER_ACTIONS.UPDATE,
+        //   uploadsResource,
+        //   params,
+        // );
+        // const expectedResponse = await feathersClient
+        //   .service(uploadsResource)
+        //   .patch(params.id, params.data);
+        // expect(response).toMatchObject(
+        //   convertSingleDatumToReactAdminType(
+        //     { ...expectedResponse, [uploadableField]: file.rawFile.name },
+        //     dataProviderOptions.defaultPrimaryKeyField,
+        //   ),
+        // );
+      });
     });
   });
 
