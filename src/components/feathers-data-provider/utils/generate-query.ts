@@ -1,6 +1,6 @@
 import { decodeObjectFromReactAdmin } from './ra-feathers-transpiler';
 
-enum SortOrders {
+export enum SortOrders {
   ascending = 'asc',
   descending = 'desc',
 }
@@ -37,7 +37,7 @@ export default (
     field = primaryKeyField;
   }
 
-  if (field !== undefined && order !== undefined) {
+  if (field !== undefined) {
     query = {
       ...query,
       $sort: {

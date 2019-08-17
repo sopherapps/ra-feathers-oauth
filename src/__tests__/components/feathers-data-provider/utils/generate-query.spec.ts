@@ -1,4 +1,6 @@
-import generateQuery from '../../../../components/feathers-data-provider/utils/generate-query';
+import generateQuery, {
+  SortOrders,
+} from '../../../../components/feathers-data-provider/utils/generate-query';
 
 describe('generate-query', () => {
   it('generates a feathersjs query object from params.filter object', () => {
@@ -24,9 +26,47 @@ describe('generate-query', () => {
   });
 
   it('generates a feathersjs pagination query if\
-  params.pagination.page and params.pagination.perPage exist', () => {});
+  params.pagination.page and params.pagination.perPage exist', () => {
+    const pagination = { page: 3, perPage: 30 };
 
-  it('generates a $sort feathersjs query if params.sort.field exists', () => {});
+    expect(generateQuery({ pagination })).toMatchObject(
+      expect.objectContaining({
+        $skip: (pagination.page - 1) * pagination.perPage,
+        $limit: pagination.perPage,
+      }),
+    );
+  });
 
-  it('defaults to descending order sort if params.sort.order is undefined', () => {});
+  it('generates a $sort feathersjs query if params.sort.field exists', () => {
+    const sort = { field: 'date_of_birth', order: SortOrders.ascending };
+    expect(generateQuery({ sort })).toMatchObject(
+      expect.objectContaining({
+        $sort: {
+          [sort.field]: 1,
+        },
+      }),
+    );
+  });
+
+  it('defaults to descending order sort if params.sort.order is undefined', () => {
+    const sort = { field: 'date_of_birth' };
+    expect(generateQuery({ sort })).toMatchObject(
+      expect.objectContaining({
+        $sort: {
+          [sort.field]: -1,
+        },
+      }),
+    );
+  });
+
+  it('generates a $sort of the primaryKey field if params.sort.field = "id"', () => {
+    const sort = { field: 'id' };
+    expect(generateQuery({ sort }, '_id')).toMatchObject(
+      expect.objectContaining({
+        $sort: {
+          _id: -1,
+        },
+      }),
+    );
+  });
 });
