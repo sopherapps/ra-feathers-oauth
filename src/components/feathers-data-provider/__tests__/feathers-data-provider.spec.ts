@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../../types/feathers-client';
+import { IFeathersClient } from '../../../types/feathers-client';
 import createFeathersClient from '../../create-feathers-client';
 import createFeathersDataProvider from '../index';
 import {
@@ -50,7 +50,7 @@ describe('feathers-data-provider', () => {
     resource: string,
     params?: any,
   ) => Promise<any>;
-  let feathersClient: FeathersClient;
+  let feathersClient: IFeathersClient;
 
   const originalFetch = window.fetch;
   const mockFetch = jest.fn(async (url, options) => ({

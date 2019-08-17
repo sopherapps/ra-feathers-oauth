@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../types/feathers-client';
+import { IFeathersClient } from '../../types/feathers-client';
 import createFeathersAuthProvider from '../create-feathers-auth-provider';
 import createFeathersClient from '../create-feathers-client';
 const AUTH_ACTIONS = {
@@ -11,7 +11,7 @@ const AUTH_ACTIONS = {
 
 describe('feathers-auth-provider', () => {
   let feathersAuthProvider: (type: any, params: any) => Promise<any>;
-  let feathersClient: FeathersClient;
+  let feathersClient: IFeathersClient;
   const originalFetch = window.fetch;
   const apiUrl = 'http://localhost:3000';
   const authProviderOptions = {

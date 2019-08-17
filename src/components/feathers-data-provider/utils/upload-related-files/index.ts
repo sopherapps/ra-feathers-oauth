@@ -1,9 +1,9 @@
-import { FeathersClient } from '../../../../types/feathers-client';
+import { IFeathersClient } from '../../../../types/feathers-client';
 import uploadFiles from './upload-files';
 import { shouldUploadFiles } from './utils';
 export * from './utils';
 
-export interface UploadsConfig {
+export interface IUploadsConfig {
   multerFieldNameSetting: string;
   uploadsUrl: string;
   resourceUploadableFieldMap: { [key: string]: string };
@@ -14,19 +14,19 @@ export interface UploadsConfig {
  *
  * Uploads any related files and updates the params.data uploadable field with the
  * identifiers of the uploaded files. Identifiers can be urls, ids, etc
- * @param app {FeathersClient}
+ * @param app {IFeathersClient}
  * @param resource { string }
  * @param params { { [key: string]: any } }
  * @param primaryKeyField { string }
- * @param uploadsConfig {UploadsConfig}
+ * @param IUploadsConfig {IUploadsConfig}
  * @returns { Promise<any>}
  */
 export default async (
-  app: FeathersClient,
+  app: IFeathersClient,
   resource: string,
   params: { [key: string]: any },
   primaryKeyField: string,
-  uploadsConfig: UploadsConfig,
+  uploadsConfig: IUploadsConfig,
 ): Promise<any> => {
   const {
     resourceUploadableFieldMap,
@@ -42,8 +42,8 @@ export default async (
       app,
       {
         multerFieldNameSetting,
-        uploadsUrl,
         uploadsForeignKey,
+        uploadsUrl,
       },
       params.data[uploadableField],
     );

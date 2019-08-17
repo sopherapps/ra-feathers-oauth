@@ -1,7 +1,7 @@
-import { FeathersClient } from '../types/feathers-client';
+import { IFeathersClient } from '../types/feathers-client';
 
 export default (
-  app: FeathersClient,
+  app: IFeathersClient,
   {
     permissionsField = 'roles',
     logoutOnForbidden = true,
@@ -19,8 +19,8 @@ export default (
       // in the on the React Admin custom Login screen
       const { access_token } = params;
       return await app.authenticate({
-        strategy: oauthStrategy,
         access_token,
+        strategy: oauthStrategy,
       });
 
     case AUTH_LOGOUT:

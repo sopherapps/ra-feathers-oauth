@@ -1,24 +1,24 @@
 import feathers, { authentication, rest, socketio } from '@feathersjs/client';
 import * as io from 'socket.io-client';
-import { ClientTypes, FeathersClient } from '../types/feathers-client';
+import { ClientTypes, IFeathersClient } from '../types/feathers-client';
 
 export default (
   apiUrl: string,
   authOptions = {
-    storageKey: 'feathers-jwt',
-    storage: localStorage,
-    path: '/authentication',
-    locationKey: 'access_token',
-    locationErrorKey: 'error',
-    jwtStrategy: 'jwt',
     header: 'Authorization',
+    jwtStrategy: 'jwt',
+    locationErrorKey: 'error',
+    locationKey: 'access_token',
+    path: '/authentication',
     scheme: 'Bearer',
+    storage: localStorage,
+    storageKey: 'feathers-jwt',
   },
   clientType: ClientTypes = ClientTypes.Rest,
   socketIOOptions: { timeout?: number } = {},
 ) => {
   // @ts-ignore
-  const app: FeathersClient = feathers();
+  const app: IFeathersClient = feathers();
 
   // connection setup
   switch (clientType) {

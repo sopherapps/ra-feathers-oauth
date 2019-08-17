@@ -32,7 +32,8 @@ export default (
     query = { ...query, $limit: perPage, $skip: (page - 1) * perPage };
   }
 
-  let { field, order } = sort;
+  let { field } = sort;
+  const { order } = sort;
 
   if (field === 'id') {
     field = primaryKeyField;

@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../types/feathers-client';
+import { IFeathersClient } from '../../types/feathers-client';
 import create from './requests/create';
 import _delete from './requests/delete';
 import deleteMany from './requests/delete-many';
@@ -9,7 +9,7 @@ import getOne from './requests/get-one';
 import update from './requests/update';
 import updateMany from './requests/update-many';
 
-export interface FeathersDataProviderConfig {
+export interface IFeathersDataProviderConfig {
   uploadsUrl?: string;
   multerFieldNameSetting?: string;
   resourceUploadsForeignKeyMap?: { [key: string]: string };
@@ -43,7 +43,7 @@ export interface FeathersDataProviderConfig {
  * DELETE_MANY        => app.service('messages').remove(null, {query: {author: 1}})
  */
 export default (
-  app: FeathersClient,
+  app: IFeathersClient,
   {
     uploadsUrl = 'http://localhost:3030/uploads',
     multerFieldNameSetting = 'files',
@@ -61,7 +61,7 @@ export default (
     GET_ONE = 'GET_ONE',
     UPDATE = 'UPDATE',
     UPDATE_MANY = 'UPDATE_MANY',
-  }: FeathersDataProviderConfig,
+  }: IFeathersDataProviderConfig,
 ) => {
   /**
    * @param {String} type One of the constants appearing at the top if this file, e.g. 'UPDATE'
@@ -73,11 +73,11 @@ export default (
     const primaryKeyField: string =
       resourcePrimaryKeyFieldMap[resource] || defaultPrimaryKeyField;
 
-    const uploadsConfig = {
-      uploadsUrl,
+    const IUploadsConfig = {
       multerFieldNameSetting,
       resourceUploadableFieldMap,
       resourceUploadsForeignKeyMap,
+      uploadsUrl,
     };
 
     switch (type) {
@@ -99,7 +99,7 @@ export default (
           resource,
           params,
           primaryKeyField,
-          uploadsConfig,
+          IUploadsConfig,
         );
 
       case UPDATE_MANY:
@@ -108,7 +108,7 @@ export default (
           resource,
           params,
           primaryKeyField,
-          uploadsConfig,
+          IUploadsConfig,
         );
 
       case CREATE:
@@ -117,7 +117,7 @@ export default (
           resource,
           params,
           primaryKeyField,
-          uploadsConfig,
+          IUploadsConfig,
         );
 
       // case CREATE_MANY:
@@ -126,7 +126,7 @@ export default (
       //     resource,
       //     params,
       //     primaryKeyField,
-      //     uploadsConfig,
+      //     IUploadsConfig,
       //   );
 
       case DELETE:

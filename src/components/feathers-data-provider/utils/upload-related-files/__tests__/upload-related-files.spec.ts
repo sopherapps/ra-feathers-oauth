@@ -1,4 +1,4 @@
-import { FeathersClient } from '../../../../../types/feathers-client';
+import { IFeathersClient } from '../../../../../types/feathers-client';
 import createFeathersClient from '../../../../create-feathers-client';
 import uploadRealtedFiles from '../index';
 import uploadRelatedFiles from '../index';
@@ -71,7 +71,7 @@ describe('upload-related-files', () => {
       defaultPrimaryKeyField: 'id',
     };
     const apiUrl = 'http://localhost:3000';
-    let feathersClient: FeathersClient;
+    let feathersClient: IFeathersClient;
     const originalFetch = window.fetch;
     const mockFetch = jest.fn(async (url, options) => ({
       json: async () => options.body && Array.from(options.body.values()),
@@ -195,7 +195,7 @@ describe('upload-related-files', () => {
       defaultPrimaryKeyField: 'id',
     };
     const apiUrl = 'http://localhost:3000';
-    let feathersClient: FeathersClient;
+    let feathersClient: IFeathersClient;
     const originalFetch = window.fetch;
     const mockFetch = jest.fn(async (url, options) => ({
       json: async () => options.body && Array.from(options.body.values()),
