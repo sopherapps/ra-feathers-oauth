@@ -8,6 +8,7 @@ import {
 
 jest.mock('../../../components/feathers-data-provider/utils/generate-query');
 import generateQuery from '../utils/generate-query';
+import uploadRelatedFiles from '../utils/upload-related-files';
 const actualGenerateQuery = jest.requireActual(
   '../../../components/feathers-data-provider/utils/generate-query',
 ).default;
@@ -364,31 +365,65 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: CREATE', () => {
-    it('outputs {data: feathersjsClient.service(resource).create(data)}', () => {});
-    describe('uploads', () => {
-      it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
+    beforeEach(() => {
+      feathersClient.service(resource).create = jest.fn(
+        async (data: any) => data,
+      );
+    });
 
+    it('outputs {data: feathersjsClient.service(resource).create(data)}\
+    with uploadable field updated to the foreignKey of the uploaded file', async () => {
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+
+      const params = {
+        data: { name: 'John Doe', [uploadableField]: file },
+      };
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.CREATE,
+        resource,
+        params,
+      );
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .create(params.data);
+
+      expect(response).toMatchObject(
+        convertSingleDatumToReactAdminType(
+          { ...expectedResponse, [uploadableField]: file.rawFile.name },
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
+
+    describe('uploads', () => {
       it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', async () => {
-        // const params = {
-        //   id: 5,
-        //   data: { title: 'John Doe Photo', uploadsName: file },
-        // };
-        // const uploadableField =
-        //   dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
-        // const response = await feathersDataProvider(
-        //   DATA_PROVIDER_ACTIONS.UPDATE,
-        //   uploadsResource,
-        //   params,
-        // );
-        // const expectedResponse = await feathersClient
-        //   .service(uploadsResource)
-        //   .patch(params.id, params.data);
-        // expect(response).toMatchObject(
-        //   convertSingleDatumToReactAdminType(
-        //     { ...expectedResponse, [uploadableField]: file.rawFile.name },
-        //     dataProviderOptions.defaultPrimaryKeyField,
-        //   ),
-        // );
+        const uploadableField =
+          dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
+
+        const params = {
+          data: { title: 'John Doe Photo', [uploadableField]: file },
+        };
+
+        const response = await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.CREATE,
+          uploadsResource,
+          params,
+        );
+        const expectedResponse = await uploadRelatedFiles(
+          feathersClient,
+          uploadsResource,
+          params,
+          dataProviderOptions.defaultPrimaryKeyField,
+          dataProviderOptions,
+        );
+
+        expect(response).toMatchObject(
+          convertSingleDatumToReactAdminType(
+            expectedResponse,
+            dataProviderOptions.defaultPrimaryKeyField,
+          ),
+        );
       });
     });
   });
