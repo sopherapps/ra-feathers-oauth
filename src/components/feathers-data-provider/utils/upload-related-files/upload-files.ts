@@ -48,6 +48,7 @@ export default async (
   }
 
   // Initialize the params to pass to fetch
+  // @ts-ignore
   const accessToken = await feathersClient.authentication.getAccessToken();
   const options: RequestInit = {
     method: 'POST',
