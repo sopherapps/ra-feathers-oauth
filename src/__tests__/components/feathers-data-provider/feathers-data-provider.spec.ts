@@ -1,6 +1,9 @@
 import createFeathersClient from '../../../components/create-feathers-client';
 import createFeathersDataProvider from '../../../components/feathers-data-provider';
-import { convertListDataToReactAdminType } from '../../../components/feathers-data-provider/utils/ra-feathers-transpiler';
+import {
+  convertListDataToReactAdminType,
+  convertSingleDatumToReactAdminType,
+} from '../../../components/feathers-data-provider/utils/ra-feathers-transpiler';
 import { FeathersClient } from '../../../types/feathers-client';
 
 jest.mock('../../../components/feathers-data-provider/utils/generate-query');
@@ -150,7 +153,26 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: GET_ONE', () => {
-    it('outputs {data: feathersjsClient.service(resource).get(params.id)}', () => {});
+    const params = { id: 2 };
+    it('outputs {data: feathersjsClient.service(resource).get(params.id)}', async () => {
+      feathersClient.service(resource).get = jest.fn(async (data: any) => [
+        data,
+      ]);
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.GET_ONE,
+        resource,
+        params,
+      );
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .get(params.id);
+      expect(response).toMatchObject(
+        convertSingleDatumToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
   });
 
   describe('type: GET_MANY_REFERENCE', () => {
