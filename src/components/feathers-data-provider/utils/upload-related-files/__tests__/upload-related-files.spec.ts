@@ -1,7 +1,5 @@
-import {
-  isUploadsResource,
-  shouldUploadFiles,
-} from '../../../../components/feathers-data-provider/utils/upload-related-files/utils';
+import uploadsFile from '../upload-files';
+import { isUploadsResource, shouldUploadFiles } from '../utils';
 
 describe('upload-related-files', () => {
   describe('utils', () => {
@@ -60,4 +58,6 @@ describe('upload-related-files', () => {
       });
     });
   });
+
+  describe('upload-files', () => {});
 });

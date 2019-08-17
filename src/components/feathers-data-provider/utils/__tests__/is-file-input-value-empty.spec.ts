@@ -1,4 +1,4 @@
-import isFileInputValueEmpty from '../../../../components/feathers-data-provider/utils/is-file-input-value-empty';
+import isFileInputValueEmpty from '../is-file-input-value-empty';
 
 describe('is-file-input-value-empty', () => {
   it('returns true if the value passed is undefined', () => {

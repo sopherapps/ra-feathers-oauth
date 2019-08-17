@@ -1,13 +1,13 @@
-import createFeathersClient from '../../../components/create-feathers-client';
-import createFeathersDataProvider from '../../../components/feathers-data-provider';
+import createFeathersDataProvider from '..';
+import { FeathersClient } from '../../../types/feathers-client';
+import createFeathersClient from '../../create-feathers-client';
 import {
   convertListDataToReactAdminType,
   convertSingleDatumToReactAdminType,
-} from '../../../components/feathers-data-provider/utils/ra-feathers-transpiler';
-import { FeathersClient } from '../../../types/feathers-client';
+} from '../utils/ra-feathers-transpiler';
 
 jest.mock('../../../components/feathers-data-provider/utils/generate-query');
-import generateQuery from '../../../components/feathers-data-provider/utils/generate-query';
+import generateQuery from '../utils/generate-query';
 const actualGenerateQuery = jest.requireActual(
   '../../../components/feathers-data-provider/utils/generate-query',
 ).default;

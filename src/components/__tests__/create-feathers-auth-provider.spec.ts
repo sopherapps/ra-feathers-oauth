@@ -1,6 +1,6 @@
-import createFeathersAuthProvider from '../../components/create-feathers-auth-provider';
-import createFeathersClient from '../../components/create-feathers-client';
 import { FeathersClient } from '../../types/feathers-client';
+import createFeathersAuthProvider from '../create-feathers-auth-provider';
+import createFeathersClient from '../create-feathers-client';
 const AUTH_ACTIONS = {
   AUTH_CHECK: 'AUTH_CHECK',
   AUTH_ERROR: 'AUTH_ERROR',

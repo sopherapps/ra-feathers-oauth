@@ -1,6 +1,4 @@
-import generateQuery, {
-  SortOrders,
-} from '../../../../components/feathers-data-provider/utils/generate-query';
+import generateQuery, { SortOrders } from '../generate-query';
 
 describe('generate-query', () => {
   it('generates a feathersjs query object from params.filter object', () => {

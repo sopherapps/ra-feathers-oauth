@@ -1,7 +1,7 @@
 import feathers from '@feathersjs/client';
 import nodeFetch from 'node-fetch';
-import createFeathersClient from '../../components/create-feathers-client';
 import { ClientTypes } from '../../types/feathers-client';
+import createFeathersClient from '../create-feathers-client';
 
 describe('create-feathers-client', () => {
   const originalFetch = window.fetch;
