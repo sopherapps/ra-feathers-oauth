@@ -111,9 +111,34 @@ describe('upload-related-files', () => {
       expect(feathersClient.authentication.getAccessToken).toBeCalled();
     });
 
-    it('creates a formData object and appends the file obejcts to it', () => {});
-    it('POSTs to the uploadsUrl the formData with an Authorization header\
-    having the access token of the current user', () => {});
+    it('POSTs to the uploadsUrl the formData containing\
+    the files with an Authorization header\
+    having the access token of the current user', async () => {
+      await uploadFiles(
+        feathersClient,
+        { ...dataProviderOptions, uploadsForeignKey: 'id' },
+        { ...dummyFile, rawFile: dummyFile },
+      );
+
+      const accessToken = feathersClient.authentication.getAccessToken();
+      const formData = new FormData();
+      formData.append(
+        dataProviderOptions.multerFieldNameSetting,
+        dummyFile,
+        dummyFile.name,
+      );
+
+      expect(mockFetch).toBeCalledWith(
+        dataProviderOptions.uploadsUrl,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            Authorization: `Bearer ${accessToken}`,
+          }),
+          body: formData,
+        }),
+      );
+    });
+
     it('returns the an array of the foreignKeys of the uploaded files\
     if an array of files was passed to it', () => {});
     it('returns a forerignKey of the uploaded file\
