@@ -286,9 +286,83 @@ describe('upload-related-files', () => {
       });
     });
 
-    it('returns the original params.data if resource has no uploadable field', () => {});
+    it('returns the original params.data if resource has no uploadable field', async () => {
+      const params = {
+        data: {
+          name: 'All Saints Cathedral, Hoima',
+          address: 'Hoima town',
+        },
+      };
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'name' },
+          resourceUploadableFieldMap: { [`${resource}extra`]: 'logo' },
+        }),
+      ).resolves.toMatchObject(params.data);
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+          resourceUploadableFieldMap: { [`${resource}extra`]: 'logo' },
+        }),
+      ).resolves.toMatchObject(params.data);
+    });
 
     it('returns the original params.data if the value of\
-    the uploadbale field was undefined', () => {});
+    the uploadbale field was undefined', async () => {
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: {
+          [uploadableField]: undefined,
+          name: 'All Saints Cathedral, Hoima',
+          address: 'Hoima town',
+        },
+      };
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'name' },
+        }),
+      ).resolves.toMatchObject(params.data);
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+        }),
+      ).resolves.toMatchObject(params.data);
+    });
+
+    it('returns the original params.data if the value of\
+    the uploadbale field was an empty array', async () => {
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: {
+          [uploadableField]: [],
+          name: 'All Saints Cathedral, Hoima',
+          address: 'Hoima town',
+        },
+      };
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'name' },
+        }),
+      ).resolves.toMatchObject(params.data);
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+        }),
+      ).resolves.toMatchObject(params.data);
+    });
   });
 });
