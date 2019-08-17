@@ -16,6 +16,7 @@ export default (
     filter?: { [key: string]: any };
     sort?: { field?: string; order?: SortOrders };
     pagination?: { page?: number; perPage?: number };
+    [key: string]: any;
   },
   primaryKeyField = 'id',
 ) => {

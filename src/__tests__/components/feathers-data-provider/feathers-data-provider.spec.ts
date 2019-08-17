@@ -176,9 +176,48 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: GET_MANY_REFERENCE', () => {
-    it('generates a query containing {[params.target]: params.id}', () => {});
+    const params = { id: 5, target: 'location' };
+    it('generates a query containing {[params.target]: params.id}', async () => {
+      try {
+        await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.GET_MANY,
+          resource,
+          params,
+        );
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(generateQuery).toBeCalledWith(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+    });
 
-    it('outputs {data: feathersjsClient.service(resource).find({query})}', () => {});
+    it('outputs {data: feathersjsClient.service(resource).find({query})}', async () => {
+      feathersClient.service(resource).find = jest.fn(async (data: any) => [
+        data,
+      ]);
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.GET_MANY_REFERENCE,
+        resource,
+        params,
+      );
+      let query = generateQuery(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+      query = { ...query, [params.target]: params.id };
+
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .find({ query });
+      expect(response).toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
   });
 
   describe('type: UPDATE', () => {
