@@ -1,6 +1,3 @@
-export default (value: any) =>
-  (Array.isArray(value) && value.length === 0) || value === undefined;
-
 import isFileInputValueEmpty from '../../../../components/feathers-data-provider/utils/is-file-input-value-empty';
 
 describe('is-file-input-value-empty', () => {
