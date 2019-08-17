@@ -84,6 +84,7 @@ describe('upload-related-files', () => {
       window.fetch = mockFetch;
       feathersClient = createFeathersClient(apiUrl);
 
+      // @ts-ignore
       feathersClient.authentication.getAccessToken = jest.fn(
         () => 'some-random-token',
       );
@@ -99,6 +100,7 @@ describe('upload-related-files', () => {
         { ...dataProviderOptions, uploadsForeignKey: 'id' },
         { ...dummyFile, rawFile: dummyFile },
       );
+      // @ts-ignore
       expect(feathersClient.authentication.getAccessToken).toBeCalled();
     });
 
@@ -112,6 +114,7 @@ describe('upload-related-files', () => {
         files,
       );
 
+      // @ts-ignore
       const accessToken = feathersClient.authentication.getAccessToken();
       const formData = new FormData();
 
@@ -205,6 +208,7 @@ describe('upload-related-files', () => {
       window.fetch = mockFetch;
       feathersClient = createFeathersClient(apiUrl);
 
+      // @ts-ignore
       feathersClient.authentication.getAccessToken = jest.fn(
         () => 'some-random-token',
       );

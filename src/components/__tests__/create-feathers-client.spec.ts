@@ -88,6 +88,7 @@ describe('create-feathers-client', () => {
 
       const apiUrl = 'http://localhost:3000';
       const feathersClient = createFeathersClient(apiUrl);
+      // @ts-ignore
       expect(feathersClient.authentication.options).toMatchObject(
         expect.objectContaining(defaultAuthOptions),
       );
