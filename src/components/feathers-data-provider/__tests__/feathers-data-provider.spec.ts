@@ -50,10 +50,14 @@ describe('feathers-data-provider', () => {
     params?: any,
   ) => Promise<any>;
   let feathersClient: FeathersClient;
+
   const originalFetch = window.fetch;
   const mockFetch = jest.fn(async (url, options) => ({
     json: async () => options.body && Array.from(options.body.values()),
   }));
+
+  const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
+  const file = { ...dummyFile, rawFile: dummyFile };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -226,9 +230,6 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE', () => {
-    const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
-    const file = { ...dummyFile, rawFile: dummyFile };
-
     beforeEach(() => {
       feathersClient.service(resource).patch = jest.fn(
         async (id: any, data: any) => data,
@@ -264,8 +265,6 @@ describe('feathers-data-provider', () => {
           id: 5,
           data: { title: 'John Doe Photo', uploadsName: file },
         };
-        const uploadableField =
-          dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
         await expect(
           feathersDataProvider(
             DATA_PROVIDER_ACTIONS.UPDATE,
@@ -278,16 +277,89 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE_MANY', () => {
-    it('generates a query out of the params.ids', () => {});
-    it('outputs {data: feathersjsClient.service(resource).patch(null, data, {query})}', () => {});
+    const params = {
+      ids: [6, 7, 17],
+      data: { logo: file, address: 'Plot 5, Chwa II road' },
+    };
+
+    beforeEach(() => {
+      feathersClient.service(resource).patch = jest.fn(
+        async (_id: any, data: any, extraParams: any) => {
+          const idField = dataProviderOptions.defaultPrimaryKeyField;
+          return (
+            extraParams.query &&
+            extraParams.query[idField] &&
+            Array.isArray(extraParams.query[idField].$in) &&
+            extraParams.query[idField].$in.map(() => ({
+              ...data,
+            }))
+          );
+        },
+      );
+    });
+
+    it('generates a query out of the params.ids', async () => {
+      try {
+        await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.UPDATE_MANY,
+          resource,
+          params,
+        );
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(generateQuery).toBeCalledWith(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+    });
+
+    it('outputs {data: feathersjsClient.service(resource).patch(null, data, {query})}\
+    with uploadable field for each updated to the foreignKey of the uploaded file', async () => {
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.UPDATE_MANY,
+        resource,
+        params,
+      );
+
+      const query = generateQuery(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+
+      let expectedResponse = await feathersClient
+        .service(resource)
+        .patch(null, params.data, { query });
+
+      expectedResponse = expectedResponse.map((obj: any) => ({
+        ...obj,
+        [uploadableField]: file.rawFile.name,
+      }));
+
+      expect(response).toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
+
     describe('uploads', () => {
-      it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
-
-      it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', () => {});
-
-      // eslint-disable-next-line no-multi-str
-      it('updates the data to include the output from the POST to the uploadsUrl\
-      if resource is not the upload resource', () => {});
+      it('throws error if the resource is the same as the one on the uploadsUrl', async () => {
+        const uploadsParams = {
+          ids: [6, 7, 17],
+          data: { uploadsName: file, size: '50mb' },
+        };
+        await expect(
+          feathersDataProvider(
+            DATA_PROVIDER_ACTIONS.UPDATE_MANY,
+            uploadsResource,
+            uploadsParams,
+          ),
+        ).rejects.toThrow('editting');
+      });
     });
   });
 

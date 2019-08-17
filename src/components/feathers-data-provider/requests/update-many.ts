@@ -52,5 +52,5 @@ export default async (
       query,
     });
 
-  return convertListDataToReactAdminType(data, primaryKeyField);
+  return convertListDataToReactAdminType(response, primaryKeyField);
 };
