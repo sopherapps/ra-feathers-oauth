@@ -1,6 +1,13 @@
 import createFeathersClient from '../../../components/create-feathers-client';
 import createFeathersDataProvider from '../../../components/feathers-data-provider';
+import { convertListDataToReactAdminType } from '../../../components/feathers-data-provider/utils/ra-feathers-transpiler';
 import { FeathersClient } from '../../../types/feathers-client';
+
+jest.mock('../../../components/feathers-data-provider/utils/generate-query');
+import generateQuery from '../../../components/feathers-data-provider/utils/generate-query';
+const actualGenerateQuery = jest.requireActual(
+  '../../../components/feathers-data-provider/utils/generate-query',
+).default;
 
 describe('feathers-data-provider', () => {
   const DATA_PROVIDER_ACTIONS = {
@@ -25,6 +32,7 @@ describe('feathers-data-provider', () => {
     ...DATA_PROVIDER_ACTIONS,
   };
   const apiUrl = 'http://localhost:3000';
+  const resource = 'churches';
   let feathersDataProvider: (
     type: any,
     resource: string,
@@ -41,7 +49,8 @@ describe('feathers-data-provider', () => {
     // @ts-ignore
     window.fetch = mockFetch;
     feathersClient = createFeathersClient(apiUrl);
-    // feathersClient.authenticate = jest.fn(async (data: any) => data);
+    // @ts-ignore
+    generateQuery.mockImplementation(actualGenerateQuery);
 
     feathersDataProvider = createFeathersDataProvider(
       feathersClient,
@@ -54,9 +63,42 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: GET_LIST', () => {
-    it('generates a query out of the params', () => {});
+    const params = { filter: { id: 6 } };
+    it('generates a query out of the params', async () => {
+      try {
+        await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.GET_LIST,
+          resource,
+          params,
+        );
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(generateQuery).toBeCalledWith(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+    });
     it('outputs {data: feathersjsClient.service(resource).find({query})}', async () => {
-      // feathersDataProvider(DATA_PROVIDER_ACTIONS.GET_LIST, );
+      feathersClient.service(resource).find = jest.fn(async (data: any) => [
+        data,
+      ]);
+      // try {
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.GET_LIST,
+        resource,
+        params,
+      );
+      const query = generateQuery(params);
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .find({ query });
+      expect(response).toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
     });
   });
 
@@ -76,9 +118,7 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE', () => {
-    it(
-      'outputs {data: feathersjsClient.service(resource).patch(params.id, data)}',
-    );
+    it('outputs {data: feathersjsClient.service(resource).patch(params.id, data)}', () => {});
     describe('uploads', () => {
       it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
 
@@ -92,9 +132,7 @@ describe('feathers-data-provider', () => {
 
   describe('type: UPDATE_MANY', () => {
     it('generates a query out of the params.ids', () => {});
-    it(
-      'outputs {data: feathersjsClient.service(resource).patch(null, data, {query})}',
-    );
+    it('outputs {data: feathersjsClient.service(resource).patch(null, data, {query})}', () => {});
     describe('uploads', () => {
       it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
 
@@ -107,7 +145,7 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: CREATE', () => {
-    it('outputs {data: feathersjsClient.service(resource).create(data)}');
+    it('outputs {data: feathersjsClient.service(resource).create(data)}', () => {});
     describe('uploads', () => {
       it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
 
