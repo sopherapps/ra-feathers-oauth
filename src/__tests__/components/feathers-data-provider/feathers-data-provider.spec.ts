@@ -107,8 +107,46 @@ describe('feathers-data-provider', () => {
 
   // First handle the testing of the ra-feathers-transpiler utility
   describe('type: GET_MANY', () => {
-    it('generates a query out of the params.ids', () => {});
-    it('outputs {data: feathersjsClient.service(resource).find({query})}', () => {});
+    const params = { ids: [6, 7, 17] };
+    it('generates a query out of the params.ids', async () => {
+      try {
+        await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.GET_MANY,
+          resource,
+          params,
+        );
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(generateQuery).toBeCalledWith(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+    });
+
+    it('outputs {data: feathersjsClient.service(resource).find({query})}', async () => {
+      feathersClient.service(resource).find = jest.fn(async (data: any) => [
+        data,
+      ]);
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.GET_MANY,
+        resource,
+        params,
+      );
+      const query = generateQuery(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .find({ query });
+      expect(response).toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
   });
 
   describe('type: GET_ONE', () => {
