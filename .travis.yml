@@ -20,4 +20,5 @@ deploy:
     branch: master
 
 before_deploy:
+  - npm run typedoc
   - touch docs/.nojekyll

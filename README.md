@@ -1,4 +1,4 @@
-# ra-feathers-oauth [![Build Status](https://travis-ci.org/sopherapps/ra-feathersjs-oauth.svg?branch=master)](https://travis-ci.org/sopherapps/ra-feathersjs-oauth) [![Coverage Status](https://coveralls.io/repos/github/sopherapps/ra-feathersjs-oauth/badge.svg?branch=master)](https://coveralls.io/github/sopherapps/ra-feathersjs-oauth?branch=master)
+# ra-feathers-oauth [![Build Status](https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master)](https://travis-ci.org/sopherapps/ra-feathers-oauth) [![Coverage Status](https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master)](https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master)
 
 This provides a `data-provider` and an `auth-provider` for the your [react admin](https://marmelab.com/react-admin) app connecting it to a [feathersjs 4](https://crow.docs.feathersjs.com/) app
 
