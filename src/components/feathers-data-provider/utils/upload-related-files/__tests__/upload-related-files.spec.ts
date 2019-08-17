@@ -1,6 +1,7 @@
 import { FeathersClient } from '../../../../../types/feathers-client';
 import createFeathersClient from '../../../../create-feathers-client';
-// import createFeathersDataProvider from '../../../index';
+import uploadRealtedFiles from '../index';
+import uploadRelatedFiles from '../index';
 import uploadFiles from '../upload-files';
 import { isUploadsResource, shouldUploadFiles } from '../utils';
 
@@ -70,11 +71,6 @@ describe('upload-related-files', () => {
       defaultPrimaryKeyField: 'id',
     };
     const apiUrl = 'http://localhost:3000';
-    // let feathersDataProvider: (
-    //   type: any,
-    //   resource: string,
-    //   params?: any,
-    // ) => Promise<any>;
     let feathersClient: FeathersClient;
     const originalFetch = window.fetch;
     const mockFetch = jest.fn(async (url, options) => ({
@@ -91,11 +87,6 @@ describe('upload-related-files', () => {
       feathersClient.authentication.getAccessToken = jest.fn(
         () => 'some-random-token',
       );
-
-      // feathersDataProvider = createFeathersDataProvider(
-      //   feathersClient,
-      //   dataProviderOptions,
-      // );
     });
 
     afterEach(() => {
@@ -135,6 +126,7 @@ describe('upload-related-files', () => {
       expect(mockFetch).toBeCalledWith(
         dataProviderOptions.uploadsUrl,
         expect.objectContaining({
+          method: 'POST',
           headers: expect.objectContaining({
             Authorization: `Bearer ${accessToken}`,
           }),
@@ -187,5 +179,85 @@ describe('upload-related-files', () => {
         ),
       ).resolves.toEqual(file.rawFile.lastModified);
     });
+  });
+
+  describe('upload-related-files default import', () => {
+    const resource = 'churches';
+    const dataProviderOptions = {
+      uploadsUrl: 'http://localhost:3030/uploads',
+      multerFieldNameSetting: 'files',
+      resourcePrimaryKeyFieldMap: {},
+      resourceUploadsForeignKeyMap: { [resource]: 'url' },
+      resourceUploadableFieldMap: { [resource]: 'logo' },
+      defaultPrimaryKeyField: 'id',
+    };
+    const apiUrl = 'http://localhost:3000';
+    let feathersClient: FeathersClient;
+    const originalFetch = window.fetch;
+    const mockFetch = jest.fn(async (url, options) => ({
+      json: async () => options.body && Array.from(options.body.values()),
+    }));
+    const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // @ts-ignore
+      window.fetch = mockFetch;
+      feathersClient = createFeathersClient(apiUrl);
+
+      feathersClient.authentication.getAccessToken = jest.fn(
+        () => 'some-random-token',
+      );
+    });
+
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+
+    it('returns params.data with the uploadable field replaced\
+    by the array of the foreignkeys of the uploaded files for multiple file upload', async () => {
+      const files = [1, 2, 3].map(() => ({ ...dummyFile, rawFile: dummyFile }));
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: {
+          [uploadableField]: files,
+          name: 'All Saints Cathedral, Hoima',
+          address: 'Hoima town',
+        },
+      };
+      const fileNames = files.map(file => file.rawFile.name);
+      const fileLastModifiedValues = files.map(
+        file => file.rawFile.lastModified,
+      );
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'name' },
+        }),
+      ).resolves.toMatchObject({
+        ...params.data,
+        [uploadableField]: fileNames,
+      });
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+        }),
+      ).resolves.toMatchObject({
+        ...params.data,
+        [uploadableField]: fileLastModifiedValues,
+      });
+    });
+
+    it('returns params.data with the uploadable field replaced\
+    by the foreignkey of the uploaded file for single file upload', () => {});
+
+    it('returns the original params.data if resource has no uploadable field', () => {});
+
+    it('returns the original params.data if the value of\
+    the uploadbale field was undefined', () => {});
   });
 });
