@@ -168,6 +168,24 @@ describe('upload-related-files', () => {
       ).resolves.toEqual(expect.arrayContaining(fileLastModifiedValues));
     });
     it('returns a forerignKey of the uploaded file\
-    if a single file was passed to it', () => {});
+    if a single file was passed to it', async () => {
+      const file = { ...dummyFile, rawFile: dummyFile };
+
+      await expect(
+        uploadFiles(
+          feathersClient,
+          { ...dataProviderOptions, uploadsForeignKey: 'name' },
+          file,
+        ),
+      ).resolves.toEqual(file.rawFile.name);
+
+      await expect(
+        uploadFiles(
+          feathersClient,
+          { ...dataProviderOptions, uploadsForeignKey: 'lastModified' },
+          file,
+        ),
+      ).resolves.toEqual(file.rawFile.lastModified);
+    });
   });
 });
