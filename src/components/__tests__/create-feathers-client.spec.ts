@@ -72,7 +72,7 @@ describe('create-feathers-client', () => {
         expect(mockFetch).not.toBeCalled();
         expect(feathersClient.io.io.uri).toBe(apiUrl);
       }
-    }, 10000);
+    }, 15000);
 
     it('Has a featherjs configured client with the authOptions passed', () => {
       const defaultAuthOptions = {
