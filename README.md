@@ -31,7 +31,21 @@ Your feathersjs server should be running on version 4 and above.
 ```JavaScript
 import React from "react";
 import {
-  Admin, Resource
+  Admin, Resource,
+  AUTH_CHECK,
+  AUTH_ERROR,
+  AUTH_GET_PERMISSIONS,
+  AUTH_LOGIN,
+  AUTH_LOGOUT,
+  CREATE,
+  DELETE,
+  DELETE_MANY,
+  GET_LIST,
+  GET_MANY,
+  GET_MANY_REFERENCE,
+  GET_ONE,
+  UPDATE,
+  UPDATE_MANY
 } from "react-admin";
 
 import { UserList, UserEdit, UserShow } from "./resources/users";
@@ -55,11 +69,25 @@ const dataProvider = feathersDataProvider(feathersClient, {
   multerFieldNameSetting: "files",
   resourceUploadsForeignKeyMap: { posts: "_id", uploads: "url" },
   resourceUploadableFieldMap: { posts: "image", uploads: "url" },
-  defaultPrimaryKeyField: "_id"
+  defaultPrimaryKeyField: "_id",
+  CREATE,
+  DELETE,
+  DELETE_MANY,
+  GET_LIST,
+  GET_MANY,
+  GET_MANY_REFERENCE,
+  GET_ONE,
+  UPDATE,
+  UPDATE_MANY
 });
 const authProvider = feathersAuthProvider(feathersClient, {
   permissionsField: "permissions",
-  oauthStrategy: "google"
+  oauthStrategy: "google",
+  AUTH_CHECK,
+  AUTH_ERROR,
+  AUTH_GET_PERMISSIONS,
+  AUTH_LOGIN,
+  AUTH_LOGOUT
 });
 
 const App = () => (
