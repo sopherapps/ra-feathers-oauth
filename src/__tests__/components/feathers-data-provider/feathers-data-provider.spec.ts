@@ -25,17 +25,18 @@ describe('feathers-data-provider', () => {
     UPDATE: 'UPDATE',
     UPDATE_MANY: 'UPDATE_MANY',
   };
+  const resource = 'churches';
   const dataProviderOptions = {
     uploadsUrl: 'http://localhost:3030/uploads',
     multerFieldNameSetting: 'files',
-    resourceUploadsForeignKeyMap: {},
-    resourceUploadableFieldMap: {},
+    resourceUploadsForeignKeyMap: { [resource]: 'url' },
+    resourceUploadableFieldMap: { [resource]: 'logo' },
     resourcePrimaryKeyFieldMap: {},
     defaultPrimaryKeyField: 'id',
     ...DATA_PROVIDER_ACTIONS,
   };
   const apiUrl = 'http://localhost:3000';
-  const resource = 'churches';
+
   let feathersDataProvider: (
     type: any,
     resource: string,
@@ -108,7 +109,6 @@ describe('feathers-data-provider', () => {
     });
   });
 
-  // First handle the testing of the ra-feathers-transpiler utility
   describe('type: GET_MANY', () => {
     const params = { ids: [6, 7, 17] };
     it('generates a query out of the params.ids', async () => {
@@ -219,7 +219,7 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: UPDATE', () => {
-    const params = { id: 5, data: { name: 'John Doe' } };
+    const params = { id: 5, data: { name: 'John Doe', logo: { rawFile: {} } } };
     it('outputs {data: feathersjsClient.service(resource).patch(params.id, params.data)}', async () => {
       feathersClient.service(resource).patch = jest.fn(
         async (id: any, data: any) => ({ id, data }),
@@ -240,7 +240,15 @@ describe('feathers-data-provider', () => {
       );
     });
     describe('uploads', () => {
-      it('makes a POST to the uploadsUrl in case the resource has an uploadable field', () => {});
+      it('makes a POST to the uploadsUrl in case the resource has an uploadable field', async () => {
+        expect(mockFetch).toBeCalledWith(
+          dataProviderOptions.uploadsUrl,
+          expect.objectContaining({
+            method: 'POST',
+            headers: expect.objectContaining({}),
+          }),
+        );
+      });
 
       it('outputs response from the upload if the resource is the same as the one on the uploadsUrl', () => {});
 
