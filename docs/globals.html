@@ -915,7 +915,8 @@ img { max-width: 100%; }
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
 			<h1 id="ra-feathers-oauth-build-status-coverage-status">ra-feathers-oauth <a href="https://travis-ci.org/sopherapps/ra-feathers-oauth"><img src="https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master"><img src="https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master" alt="Coverage Status"></a></h1>
-			<p>This provides a <code>data-provider</code> and an <code>auth-provider</code> for the your <a href="https://marmelab.com/react-admin">react admin</a> app connecting it to a <a href="https://crow.docs.feathersjs.com/">feathersjs 4</a> app</p>
+			<p>This provides a <code>data-provider</code> and an <code>auth-provider</code> for the your <a href="https://marmelab.com/react-admin">react admin</a> app connecting it to a <a href="https://crow.docs.feathersjs.com/">feathersjs 4</a> app.</p>
+			<p><strong>Note however, that it can be used even without react-admin.</strong></p>
 			<h2 id="installation">Installation</h2>
 			<p>This is an NPM package. Run the command below for your <a href="https://marmelab.com/react-admin">React Admin</a> app folder</p>
 			<pre><code class="language-bash">npm install --save ra-feathersjs-oauth</code></pre>
@@ -929,7 +930,21 @@ img { max-width: 100%; }
 			<h3 id="example-of-the-index-file-of-a-react-admin-app">Example of the index file of a react admin app</h3>
 			<pre><code class="language-JavaScript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
 <span class="hljs-keyword">import</span> {
-  Admin, Resource
+  Admin, Resource,
+  AUTH_CHECK,
+  AUTH_ERROR,
+  AUTH_GET_PERMISSIONS,
+  AUTH_LOGIN,
+  AUTH_LOGOUT,
+  CREATE,
+  DELETE,
+  DELETE_MANY,
+  GET_LIST,
+  GET_MANY,
+  GET_MANY_REFERENCE,
+  GET_ONE,
+  UPDATE,
+  UPDATE_MANY
 } <span class="hljs-keyword">from</span> <span class="hljs-string">"react-admin"</span>;
 
 <span class="hljs-keyword">import</span> { UserList, UserEdit, UserShow } <span class="hljs-keyword">from</span> <span class="hljs-string">"./resources/users"</span>;
@@ -953,11 +968,25 @@ img { max-width: 100%; }
   <span class="hljs-attr">multerFieldNameSetting</span>: <span class="hljs-string">"files"</span>,
   <span class="hljs-attr">resourceUploadsForeignKeyMap</span>: { <span class="hljs-attr">posts</span>: <span class="hljs-string">"_id"</span>, <span class="hljs-attr">uploads</span>: <span class="hljs-string">"url"</span> },
   <span class="hljs-attr">resourceUploadableFieldMap</span>: { <span class="hljs-attr">posts</span>: <span class="hljs-string">"image"</span>, <span class="hljs-attr">uploads</span>: <span class="hljs-string">"url"</span> },
-  <span class="hljs-attr">defaultPrimaryKeyField</span>: <span class="hljs-string">"_id"</span>
+  <span class="hljs-attr">defaultPrimaryKeyField</span>: <span class="hljs-string">"_id"</span>,
+  CREATE,
+  DELETE,
+  DELETE_MANY,
+  GET_LIST,
+  GET_MANY,
+  GET_MANY_REFERENCE,
+  GET_ONE,
+  UPDATE,
+  UPDATE_MANY
 });
 <span class="hljs-keyword">const</span> authProvider = feathersAuthProvider(feathersClient, {
   <span class="hljs-attr">permissionsField</span>: <span class="hljs-string">"permissions"</span>,
-  <span class="hljs-attr">oauthStrategy</span>: <span class="hljs-string">"google"</span>
+  <span class="hljs-attr">oauthStrategy</span>: <span class="hljs-string">"google"</span>,
+  AUTH_CHECK,
+  AUTH_ERROR,
+  AUTH_GET_PERMISSIONS,
+  AUTH_LOGIN,
+  AUTH_LOGOUT
 });
 
 <span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
