@@ -1,7 +1,6 @@
 # ra-feathers-oauth [![Build Status](https://travis-ci.org/sopherapps/ra-feathersjs-oauth.svg?branch=master)](https://travis-ci.org/sopherapps/ra-feathersjs-oauth) [![Coverage Status](https://coveralls.io/repos/github/sopherapps/ra-feathersjs-oauth/badge.svg?branch=master)](https://coveralls.io/github/sopherapps/ra-feathersjs-oauth?branch=master)
 
 This provides a `data-provider` and an `auth-provider` for the your [react admin](https://marmelab.com/react-admin) app connecting it to a [feathersjs 4](https://crow.docs.feathersjs.com/) app
-__Note: This package is still under heavy development. Use at your own risk__
 
 ## Installation
 
