@@ -253,7 +253,38 @@ describe('upload-related-files', () => {
     });
 
     it('returns params.data with the uploadable field replaced\
-    by the foreignkey of the uploaded file for single file upload', () => {});
+    by the foreign key of the uploaded file for single file upload', async () => {
+      const file = { ...dummyFile, rawFile: dummyFile };
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: {
+          [uploadableField]: file,
+          name: 'All Saints Cathedral, Hoima',
+          address: 'Hoima town',
+        },
+      };
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'name' },
+        }),
+      ).resolves.toMatchObject({
+        ...params.data,
+        [uploadableField]: file.rawFile.name,
+      });
+
+      await expect(
+        uploadRelatedFiles(feathersClient, resource, params, '_id', {
+          ...dataProviderOptions,
+          resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+        }),
+      ).resolves.toMatchObject({
+        ...params.data,
+        [uploadableField]: file.rawFile.lastModified,
+      });
+    });
 
     it('returns the original params.data if resource has no uploadable field', () => {});
 
