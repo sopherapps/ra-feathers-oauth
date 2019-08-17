@@ -1,10 +1,10 @@
-import { FeathersClient } from '../../../../typings/feathers-client';
+import { IFeathersClient } from '../../../../types/feathers-client';
 
-interface ReactDropzoneFile extends File {
+interface IReactDropzoneFile extends File {
   rawFile: File;
 }
 
-interface UploadFilesConfig {
+interface IUploadFilesConfig {
   multerFieldNameSetting: string;
   uploadsUrl: string;
   uploadsForeignKey: string;
@@ -13,19 +13,19 @@ interface UploadFilesConfig {
 /**
  * Uploads a file to the uploadsUrl and returns the identifier(s) of the uploaded file(s)
  * the ids are important for the related object to relate to these uploads
- * @param feathersClient {FeathersClient}
+ * @param feathersClient {IFeathersClient}
  * @param config {{ multerFieldNameSetting: string, uploadsUrl: string, uploadsForeignKey: string}}
- * @param fileInputValue {ReactDropzoneFile[] | ReactDropzoneFile} where ReactDropzone is
+ * @param fileInputValue {IReactDropzoneFile[] | IReactDropzoneFile} where ReactDropzone is
  * the blob object from a react-dropzone file input field
  * @returns {(string | number)[]|(string | number)}
  */
 export default async (
-  feathersClient: FeathersClient,
-  config: UploadFilesConfig,
-  fileInputValue: ReactDropzoneFile[] | ReactDropzoneFile,
+  feathersClient: IFeathersClient,
+  config: IUploadFilesConfig,
+  fileInputValue: IReactDropzoneFile[] | IReactDropzoneFile,
 ): Promise<Array<string | number> | (string | number)> => {
   let multipleFilesAllowed = false;
-  let files: ReactDropzoneFile[] = [];
+  let files: IReactDropzoneFile[] = [];
 
   // push the files from fileInputValue to files
   if (Array.isArray(fileInputValue)) {
@@ -48,13 +48,14 @@ export default async (
   }
 
   // Initialize the params to pass to fetch
+  // @ts-ignore
   const accessToken = await feathersClient.authentication.getAccessToken();
   const options: RequestInit = {
-    method: 'POST',
     body: form,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    method: 'POST',
   };
   // important: unset the Content-Type header so that the browser sets an appropriate one
   // https://muffinman.io/uploading-files-using-fetch-multipart-form-data/

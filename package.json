@@ -1,7 +1,7 @@
 {
   "name": "ra-feathersjs-oauth",
   "version": "0.0.1",
-  "description": "A feathersjs client for react admin focusing on oauth login",
+  "description": "An oauth-based feathersjs client for react admin and any similar frameworks",
   "private": false,
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,17 +37,25 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@feathersjs/client": "4.3.0-pre.2",
-    "react-admin": "^2.9.5",
+    "@feathersjs/client": "^4.3.0-pre.2",
     "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
+    "@feathersjs/authentication": "^4.3.0-pre.2",
+    "@feathersjs/authentication-client": "^4.3.0-pre.2",
+    "@feathersjs/errors": "^4.3.0-pre.2",
+    "@feathersjs/feathers": "^4.3.0-pre.2",
+    "@feathersjs/primus-client": "^4.3.0-pre.2",
+    "@feathersjs/rest-client": "^4.3.0-pre.2",
+    "@feathersjs/socketio-client": "^4.3.0-pre.2",
     "@types/jest": "^24.0.13",
+    "@types/jsonwebtoken": "^8.3.3",
+    "@types/node-fetch": "^2.5.0",
     "@types/socket.io-client": "^1.4.32",
     "coveralls": "^3.0.3",
     "jest": "^24.8.0",
+    "node-fetch": "^2.6.0",
     "prettier": "^1.17.1",
-    "react-scripts": "^3.1.1",
     "ts-jest": "^24.0.2",
     "tslint": "^5.17.0",
     "tslint-config-prettier": "^1.18.0",

@@ -1,9 +1,9 @@
-export interface ReactAdminDataObject {
-  id: any;
+export interface IReactAdminDataObject {
+  id?: any;
   [key: string]: any;
 }
 
-export interface SingleObject {
+export interface ISingleObject {
   [key: string]: any;
 }
 
@@ -11,12 +11,12 @@ export interface SingleObject {
  * Converts a Data object from Feathersjs to React Admin style {e.g. _id to id}
  * @param obj {{[primaryKeyField]:any, [key: string]: any}} object to convert
  * @param primaryKeyField {string} primaryKey on the featherjs side of things
- * @returns {ReactAdminDataObject} {{ id: any, [key: string]: any }}
+ * @returns {IReactAdminDataObject} {{ id: any, [key: string]: any }}
  */
 export const encodeObjectForReactAdmin = (
   obj: { [key: string]: any },
   primaryKeyField: string = 'id',
-): ReactAdminDataObject => ({
+): IReactAdminDataObject => ({
   ...obj,
   [primaryKeyField]: undefined,
   id: obj[primaryKeyField],
@@ -26,12 +26,12 @@ export const encodeObjectForReactAdmin = (
  * Converts a Data object from React Admin style to Feathersjs {e.g. id to _id}
  * @param obj {{ id: any, [key: string]: any }} object to convert
  * @param primaryKeyField {string} primaryKey on the featherjs side of things
- * @returns {SingleObject} {{[key: string]: any}}
+ * @returns {ISingleObject} {{[key: string]: any}}
  */
 export const decodeObjectFromReactAdmin = (
-  obj: ReactAdminDataObject,
+  obj: IReactAdminDataObject,
   primaryKeyField: string = 'id',
-): SingleObject => ({
+): ISingleObject => ({
   ...obj,
   id: undefined,
   [primaryKeyField]: obj.id,
@@ -41,12 +41,12 @@ export const decodeObjectFromReactAdmin = (
  * Converts an array of objects from Featherjs style to React Admin style e.g. _id to id
  * @param data { [{[primaryKeyField]: any, [key: string]: any}] } array of objects to convert
  * @param primaryKeyField {string} primaryKey on the featherjs side of things
- * @returns {ReactAdminDataObject[]} {[{ id: any, [key: string]: any }]}
+ * @returns {IReactAdminDataObject[]} {[{ id: any, [key: string]: any }]}
  */
 export const encodeListDataForReactAdmin = (
-  data: SingleObject[],
+  data: ISingleObject[],
   primaryKeyField: string = 'id',
-): ReactAdminDataObject[] => {
+): IReactAdminDataObject[] => {
   if (Array.isArray(data)) {
     return data.map(datum => encodeObjectForReactAdmin(datum, primaryKeyField));
   }
@@ -61,7 +61,7 @@ export const encodeListDataForReactAdmin = (
 export const convertListDataToReactAdminType = (
   feathersjsData: any,
   primaryKeyField: string,
-): { data: ReactAdminDataObject[] } => {
+): { data: IReactAdminDataObject[] } => {
   const tmp = Array.isArray(feathersjsData)
     ? feathersjsData
     : feathersjsData.data;
@@ -76,6 +76,6 @@ export const convertListDataToReactAdminType = (
 export const convertSingleDatumToReactAdminType = (
   feathersjsData: any,
   primaryKeyField: string,
-): { data: ReactAdminDataObject } => {
+): { data: IReactAdminDataObject } => {
   return { data: encodeObjectForReactAdmin(feathersjsData, primaryKeyField) };
 };

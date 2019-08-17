@@ -1,6 +1,6 @@
 import { decodeObjectFromReactAdmin } from './ra-feathers-transpiler';
 
-enum SortOrders {
+export enum SortOrders {
   ascending = 'asc',
   descending = 'desc',
 }
@@ -12,10 +12,11 @@ export default (
     filter = {},
     ids,
   }: {
-    ids?: [string | number];
+    ids?: string[] | number[];
     filter?: { [key: string]: any };
     sort?: { field?: string; order?: SortOrders };
     pagination?: { page?: number; perPage?: number };
+    [key: string]: any;
   },
   primaryKeyField = 'id',
 ) => {
@@ -31,13 +32,14 @@ export default (
     query = { ...query, $limit: perPage, $skip: (page - 1) * perPage };
   }
 
-  let { field, order } = sort;
+  let { field } = sort;
+  const { order } = sort;
 
   if (field === 'id') {
     field = primaryKeyField;
   }
 
-  if (field !== undefined && order !== undefined) {
+  if (field !== undefined) {
     query = {
       ...query,
       $sort: {

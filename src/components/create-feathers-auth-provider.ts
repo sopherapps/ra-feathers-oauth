@@ -1,17 +1,16 @@
-import {
-  AUTH_CHECK,
-  AUTH_ERROR,
-  AUTH_GET_PERMISSIONS,
-  AUTH_LOGIN,
-  AUTH_LOGOUT,
-} from 'react-admin';
+import { IFeathersClient } from '../types/feathers-client';
 
 export default (
-  app: any,
+  app: IFeathersClient,
   {
     permissionsField = 'roles',
     logoutOnForbidden = true,
     oauthStrategy = 'jwt',
+    AUTH_LOGIN = 'AUTH_LOGIN',
+    AUTH_LOGOUT = 'AUTH_LOGOUT',
+    AUTH_GET_PERMISSIONS = 'AUTH_GET_PERMISSIONS',
+    AUTH_ERROR = 'AUTH_ERROR',
+    AUTH_CHECK = 'AUTH_CHECK',
   },
 ) => async (type: any, params: any) => {
   switch (type) {
@@ -20,8 +19,8 @@ export default (
       // in the on the React Admin custom Login screen
       const { access_token } = params;
       return await app.authenticate({
-        strategy: oauthStrategy,
         access_token,
+        strategy: oauthStrategy,
       });
 
     case AUTH_LOGOUT:
@@ -41,6 +40,9 @@ export default (
 
     case AUTH_GET_PERMISSIONS:
       const { user } = await app.get('authentication');
+      if (!user) {
+        throw new Error('User is not logged in');
+      }
       return user[permissionsField];
 
     default:
