@@ -7,9 +7,10 @@ export const shouldUploadFiles = (
   resource: string,
   params: { [key: string]: any },
   resourceUploadableFieldMap: { [key: string]: string },
-) => {
+): boolean => {
   const uploadableField = resourceUploadableFieldMap[resource];
-  return (
-    uploadableField && !isFileInputValueEmpty(params.data[uploadableField])
-  );
+  if (uploadableField) {
+    return !isFileInputValueEmpty(params.data[uploadableField]);
+  }
+  return false;
 };
