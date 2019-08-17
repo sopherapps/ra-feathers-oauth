@@ -79,17 +79,20 @@ describe('feathers-data-provider', () => {
         dataProviderOptions.defaultPrimaryKeyField,
       );
     });
+
     it('outputs {data: feathersjsClient.service(resource).find({query})}', async () => {
       feathersClient.service(resource).find = jest.fn(async (data: any) => [
         data,
       ]);
-      // try {
       const response = await feathersDataProvider(
         DATA_PROVIDER_ACTIONS.GET_LIST,
         resource,
         params,
       );
-      const query = generateQuery(params);
+      const query = generateQuery(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
       const expectedResponse = await feathersClient
         .service(resource)
         .find({ query });
@@ -102,6 +105,7 @@ describe('feathers-data-provider', () => {
     });
   });
 
+  // First handle the testing of the ra-feathers-transpiler utility
   describe('type: GET_MANY', () => {
     it('generates a query out of the params.ids', () => {});
     it('outputs {data: feathersjsClient.service(resource).find({query})}', () => {});
