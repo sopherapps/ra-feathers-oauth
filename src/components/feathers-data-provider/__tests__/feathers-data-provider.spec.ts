@@ -452,7 +452,64 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: DELETE_MANY', () => {
-    it('generates a query out of the params', () => {});
-    it('outputs {data: feathersjsClient.service(resource).remove(null, {query})}', () => {});
+    const params = {
+      ids: [4, 5, 19],
+    };
+
+    beforeEach(() => {
+      feathersClient.service(resource).remove = jest.fn(
+        async (_id: any, extraParams: any) => {
+          const idField = dataProviderOptions.defaultPrimaryKeyField;
+          return (
+            extraParams.query &&
+            extraParams.query[idField] &&
+            Array.isArray(extraParams.query[idField].$in) &&
+            extraParams.query[idField].$in.map((id: any) => ({
+              [idField]: id,
+            }))
+          );
+        },
+      );
+    });
+
+    it('generates a query out of the params.ids', async () => {
+      try {
+        await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.DELETE_MANY,
+          resource,
+          params,
+        );
+      } catch (error) {
+        console.log(error.message);
+      }
+      expect(generateQuery).toBeCalledWith(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+    });
+
+    it('outputs {data: feathersjsClient.service(resource).remove(null, {query})}', async () => {
+      const query = generateQuery(
+        params,
+        dataProviderOptions.defaultPrimaryKeyField,
+      );
+
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .remove(null, { query });
+
+      await expect(
+        feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.DELETE_MANY,
+          resource,
+          params,
+        ),
+      ).resolves.toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
   });
 });
