@@ -64,6 +64,7 @@ export default (
     resourcePrimaryKeyFieldMap = {},
     defaultPrimaryKeyField = 'id',
     CREATE = 'CREATE',
+    // CREATE_MANY = 'CREATE_MANY',
     DELETE = 'DELETE',
     DELETE_MANY = 'DELETE_MANY',
     GET_LIST = 'GET_LIST',
@@ -130,6 +131,15 @@ export default (
           primaryKeyField,
           uploadsConfig,
         );
+
+      // case CREATE_MANY:
+      //   return await createMany(
+      //     app,
+      //     resource,
+      //     params,
+      //     primaryKeyField,
+      //     uploadsConfig,
+      //   );
 
       case DELETE:
         return await _delete(app, resource, params, primaryKeyField);

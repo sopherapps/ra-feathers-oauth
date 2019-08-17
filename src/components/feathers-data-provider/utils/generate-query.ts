@@ -12,7 +12,7 @@ export default (
     filter = {},
     ids,
   }: {
-    ids?: [string | number];
+    ids?: string[] | number[];
     filter?: { [key: string]: any };
     sort?: { field?: string; order?: SortOrders };
     pagination?: { page?: number; perPage?: number };

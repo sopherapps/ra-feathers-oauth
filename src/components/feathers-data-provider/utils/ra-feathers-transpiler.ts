@@ -1,5 +1,5 @@
 export interface ReactAdminDataObject {
-  id: any;
+  id?: any;
   [key: string]: any;
 }
 

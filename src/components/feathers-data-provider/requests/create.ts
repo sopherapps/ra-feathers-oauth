@@ -5,8 +5,6 @@ import uploadRelatedFiles, {
   UploadsConfig,
 } from '../utils/upload-related-files';
 
-import isFileInputValueEmpty from '../utils/is-file-input-value-empty';
-
 import {
   convertSingleDatumToReactAdminType,
   decodeObjectFromReactAdmin,
