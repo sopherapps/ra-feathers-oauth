@@ -40,7 +40,7 @@ describe('feathers-data-provider', () => {
       [uploadsResource]: 'uploadName',
     },
     resourcePrimaryKeyFieldMap: {},
-    defaultPrimaryKeyField: 'id',
+    defaultPrimaryKeyField: '_id',
     ...DATA_PROVIDER_ACTIONS,
   };
   const apiUrl = 'http://localhost:3000';
@@ -429,7 +429,26 @@ describe('feathers-data-provider', () => {
   });
 
   describe('type: DELETE', () => {
-    it('outputs {data: feathersjsClient.service(resource).remove(params.id)}', () => {});
+    it('outputs {data: feathersjsClient.service(resource).remove(params.id)}', async () => {
+      feathersClient.service(resource).remove = jest.fn(async (_id: any) => ({
+        [dataProviderOptions.defaultPrimaryKeyField]: _id,
+      }));
+      const params = {
+        id: 4,
+      };
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .remove(params.id);
+
+      await expect(
+        feathersDataProvider(DATA_PROVIDER_ACTIONS.DELETE, resource, params),
+      ).resolves.toMatchObject(
+        convertSingleDatumToReactAdminType(
+          expectedResponse,
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
   });
 
   describe('type: DELETE_MANY', () => {
