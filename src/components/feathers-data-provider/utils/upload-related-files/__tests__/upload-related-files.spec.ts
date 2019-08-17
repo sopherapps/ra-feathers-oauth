@@ -1,6 +1,6 @@
 import { FeathersClient } from '../../../../../types/feathers-client';
 import createFeathersClient from '../../../../create-feathers-client';
-import createFeathersDataProvider from '../../../index';
+// import createFeathersDataProvider from '../../../index';
 import uploadFiles from '../upload-files';
 import { isUploadsResource, shouldUploadFiles } from '../utils';
 
@@ -70,15 +70,15 @@ describe('upload-related-files', () => {
       defaultPrimaryKeyField: 'id',
     };
     const apiUrl = 'http://localhost:3000';
-    let feathersDataProvider: (
-      type: any,
-      resource: string,
-      params?: any,
-    ) => Promise<any>;
+    // let feathersDataProvider: (
+    //   type: any,
+    //   resource: string,
+    //   params?: any,
+    // ) => Promise<any>;
     let feathersClient: FeathersClient;
     const originalFetch = window.fetch;
     const mockFetch = jest.fn(async (url, options) => ({
-      json: async () => ({ url, options }),
+      json: async () => options.body && Array.from(options.body.values()),
     }));
     const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
 
@@ -92,10 +92,10 @@ describe('upload-related-files', () => {
         () => 'some-random-token',
       );
 
-      feathersDataProvider = createFeathersDataProvider(
-        feathersClient,
-        dataProviderOptions,
-      );
+      // feathersDataProvider = createFeathersDataProvider(
+      //   feathersClient,
+      //   dataProviderOptions,
+      // );
     });
 
     afterEach(() => {
@@ -114,19 +114,23 @@ describe('upload-related-files', () => {
     it('POSTs to the uploadsUrl the formData containing\
     the files with an Authorization header\
     having the access token of the current user', async () => {
+      const files = [1, 2, 3].map(() => ({ ...dummyFile, rawFile: dummyFile }));
       await uploadFiles(
         feathersClient,
         { ...dataProviderOptions, uploadsForeignKey: 'id' },
-        { ...dummyFile, rawFile: dummyFile },
+        files,
       );
 
       const accessToken = feathersClient.authentication.getAccessToken();
       const formData = new FormData();
-      formData.append(
-        dataProviderOptions.multerFieldNameSetting,
-        dummyFile,
-        dummyFile.name,
-      );
+
+      for (const file of files) {
+        formData.append(
+          dataProviderOptions.multerFieldNameSetting,
+          file.rawFile,
+          file.name,
+        );
+      }
 
       expect(mockFetch).toBeCalledWith(
         dataProviderOptions.uploadsUrl,
@@ -140,7 +144,29 @@ describe('upload-related-files', () => {
     });
 
     it('returns the an array of the foreignKeys of the uploaded files\
-    if an array of files was passed to it', () => {});
+    if an array of files was passed to it', async () => {
+      const files = [1, 2, 3].map(() => ({ ...dummyFile, rawFile: dummyFile }));
+      const fileNames = files.map(file => file.rawFile.name);
+      const fileLastModifiedValues = files.map(
+        file => file.rawFile.lastModified,
+      );
+
+      await expect(
+        uploadFiles(
+          feathersClient,
+          { ...dataProviderOptions, uploadsForeignKey: 'name' },
+          files,
+        ),
+      ).resolves.toEqual(expect.arrayContaining(fileNames));
+
+      await expect(
+        uploadFiles(
+          feathersClient,
+          { ...dataProviderOptions, uploadsForeignKey: 'lastModified' },
+          files,
+        ),
+      ).resolves.toEqual(expect.arrayContaining(fileLastModifiedValues));
+    });
     it('returns a forerignKey of the uploaded file\
     if a single file was passed to it', () => {});
   });
