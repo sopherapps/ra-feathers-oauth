@@ -1,4 +1,4 @@
-# ra-feathers-oauth [![Build Status](https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master)](https://travis-ci.org/sopherapps/ra-feathers-oauth) [![Coverage Status](https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master)](https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master)
+# ra-feathersjs-oauth [![Build Status](https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master)](https://travis-ci.org/sopherapps/ra-feathers-oauth) [![Coverage Status](https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master)](https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master)
 
 This provides a `data-provider` and an `auth-provider` for the your [react admin](https://marmelab.com/react-admin) app connecting it to a [feathersjs 4](https://crow.docs.feathersjs.com/) app.
 
@@ -53,7 +53,7 @@ import { PostEdit, PostCreate, PostList, PostShow } from "./resources/posts";
 
 import GoogleLogin from "./components/screens/GoogleLogin";
 
-import {feathersDataProvider, feathersAuthProvider, createFeathersClient} from "ra-feathers-oauth";
+import {createFeathersDataProvider, createFeathersAuthProvider, createFeathersClient} from "ra-feathersjs-oauth";
 
 import PostIcon from "@material-ui/icons/Send";
 import UserIcon from "@material-ui/icons/Group";
@@ -64,7 +64,7 @@ const feathersClient = createFeathersClient(apiUrl, {
   storageKey: "a-unique-storage-key"
 });
 
-const dataProvider = feathersDataProvider(feathersClient, {
+const dataProvider = createFeathersDataProvider(feathersClient, {
   uploadsUrl: `${apiUrl}/uploads`,
   multerFieldNameSetting: "files",
   resourceUploadsForeignKeyMap: { posts: "_id", uploads: "url" },
@@ -80,7 +80,7 @@ const dataProvider = feathersDataProvider(feathersClient, {
   UPDATE,
   UPDATE_MANY
 });
-const authProvider = feathersAuthProvider(feathersClient, {
+const authProvider = createFeathersAuthProvider(feathersClient, {
   permissionsField: "permissions",
   oauthStrategy: "google",
   AUTH_CHECK,
