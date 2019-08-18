@@ -61,7 +61,7 @@ export default (
     GET_ONE = 'GET_ONE',
     UPDATE = 'UPDATE',
     UPDATE_MANY = 'UPDATE_MANY',
-  }: IFeathersDataProviderConfig,
+  }: IFeathersDataProviderConfig = {},
 ) => {
   /**
    * @param {String} type One of the constants appearing at the top if this file, e.g. 'UPDATE'

@@ -11,7 +11,7 @@ export default (
     AUTH_GET_PERMISSIONS = 'AUTH_GET_PERMISSIONS',
     AUTH_ERROR = 'AUTH_ERROR',
     AUTH_CHECK = 'AUTH_CHECK',
-  },
+  } = {},
 ) => async (type: any, params: any) => {
   switch (type) {
     case AUTH_LOGIN:
