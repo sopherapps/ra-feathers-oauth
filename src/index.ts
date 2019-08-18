@@ -2,7 +2,7 @@ import createFeathersAuthProvider from './components/create-feathers-auth-provid
 import createFeathersClient from './components/create-feathers-client';
 import createFeathersDataProvider from './components/feathers-data-provider';
 
-export default {
+export = {
   createFeathersAuthProvider,
   createFeathersClient,
   createFeathersDataProvider,
