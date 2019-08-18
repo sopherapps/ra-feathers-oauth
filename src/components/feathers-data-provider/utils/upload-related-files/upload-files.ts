@@ -38,12 +38,9 @@ export default async (
   // append the files to FormData
   const form = new FormData();
   for (const file of files) {
+    const rawFile = file.rawFile || file;
     if (file) {
-      form.append(
-        config.multerFieldNameSetting,
-        file.rawFile,
-        file.rawFile.name,
-      );
+      form.append(config.multerFieldNameSetting, rawFile, rawFile.name);
     }
   }
 

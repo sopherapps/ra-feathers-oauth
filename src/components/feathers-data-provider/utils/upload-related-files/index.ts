@@ -35,6 +35,12 @@ export default async (
     uploadsUrl,
   } = uploadsConfig;
   if (shouldUploadFiles(resource, params, resourceUploadableFieldMap)) {
+    console.log(
+      resource,
+      params,
+      resourceUploadableFieldMap,
+      shouldUploadFiles(resource, params, resourceUploadableFieldMap),
+    );
     const uploadableField = resourceUploadableFieldMap[resource];
     const uploadsForeignKey =
       resourceUploadsForeignKeyMap[resource] || primaryKeyField;
