@@ -65,8 +65,12 @@ export const convertListDataToReactAdminType = (
   const tmp = Array.isArray(feathersjsData)
     ? feathersjsData
     : feathersjsData && feathersjsData.data;
-  const otherDetails = feathersjsData && feathersjsData.data? feathersjsData: {};
-  return { ...otherDetails, data: encodeListDataForReactAdmin(tmp, primaryKeyField) };
+  const otherDetails =
+    feathersjsData && feathersjsData.data ? feathersjsData : {};
+  return {
+    ...otherDetails,
+    data: encodeListDataForReactAdmin(tmp, primaryKeyField),
+  };
 };
 
 /**
