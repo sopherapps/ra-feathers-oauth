@@ -922,6 +922,9 @@ img { max-width: 100%; }
 			<a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#convertsingledatumtoreactadmintype" class="tsd-kind-icon">convert<wbr>Single<wbr>Datum<wbr>ToReact<wbr>Admin<wbr>Type</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module">
+			<a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#decodelistfromreactadmin" class="tsd-kind-icon">decode<wbr>List<wbr>From<wbr>React<wbr>Admin</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module">
 			<a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#decodeobjectfromreactadmin" class="tsd-kind-icon">decode<wbr>Object<wbr>From<wbr>React<wbr>Admin</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-external-module">
@@ -950,6 +953,7 @@ img { max-width: 100%; }
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#convertlistdatatoreactadmintype" class="tsd-kind-icon">convert<wbr>List<wbr>Data<wbr>ToReact<wbr>Admin<wbr>Type</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#convertsingledatumtoreactadmintype" class="tsd-kind-icon">convert<wbr>Single<wbr>Datum<wbr>ToReact<wbr>Admin<wbr>Type</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#decodelistfromreactadmin" class="tsd-kind-icon">decode<wbr>List<wbr>From<wbr>React<wbr>Admin</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#decodeobjectfromreactadmin" class="tsd-kind-icon">decode<wbr>Object<wbr>From<wbr>React<wbr>Admin</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#encodelistdataforreactadmin" class="tsd-kind-icon">encode<wbr>List<wbr>Data<wbr>For<wbr>React<wbr>Admin</a></li>
 							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_components_feathers_data_provider_utils_ra_feathers_transpiler_.html#encodeobjectforreactadmin" class="tsd-kind-icon">encode<wbr>Object<wbr>For<wbr>React<wbr>Admin</a></li>
@@ -970,7 +974,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/4fb8f7d/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L61">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L75">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:75</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1016,7 +1020,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/4fb8f7d/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L81">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:81</a></li>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L95">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:95</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1053,6 +1057,43 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+				<a name="decodelistfromreactadmin" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> decode<wbr>List<wbr>From<wbr>React<wbr>Admin</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+					<li class="tsd-signature tsd-kind-icon">decode<wbr>List<wbr>From<wbr>React<wbr>Admin<span class="tsd-signature-symbol">(</span>objList<span class="tsd-signature-symbol">: </span><a href="../interfaces/_components_feathers_data_provider_utils_ra_feathers_transpiler_.ireactadmindataobject.html" class="tsd-signature-type">IReactAdminDataObject</a><span class="tsd-signature-symbol">[]</span>, primaryKeyField<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_components_feathers_data_provider_utils_ra_feathers_transpiler_.isingleobject.html" class="tsd-signature-type">ISingleObject</a><span class="tsd-signature-symbol">[]</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L46">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:46</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Converts a list of Data object from React Admin style to Feathersjs {e.g. id to _id}</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>objList: <a href="../interfaces/_components_feathers_data_provider_utils_ra_feathers_transpiler_.ireactadmindataobject.html" class="tsd-signature-type">IReactAdminDataObject</a><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> primaryKeyField: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;id&quot;</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>primaryKey on the featherjs side of things</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_components_feathers_data_provider_utils_ra_feathers_transpiler_.isingleobject.html" class="tsd-signature-type">ISingleObject</a><span class="tsd-signature-symbol">[]</span></h4>
+						<p>{{[key: string]: any}}</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 				<a name="decodeobjectfromreactadmin" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagConst">Const</span> decode<wbr>Object<wbr>From<wbr>React<wbr>Admin</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
@@ -1062,7 +1103,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/4fb8f7d/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L31">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:31</a></li>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L31">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:31</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1104,7 +1145,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/4fb8f7d/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L46">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L60">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:60</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1146,7 +1187,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/4fb8f7d/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L16">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:16</a></li>
+								<li>Defined in <a href="https://github.com/sopherapps/ra-feathers-oauth/blob/2235e2b/src/components/feathers-data-provider/utils/ra-feathers-transpiler.ts#L16">components/feathers-data-provider/utils/ra-feathers-transpiler.ts:16</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
