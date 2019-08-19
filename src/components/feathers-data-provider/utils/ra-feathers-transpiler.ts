@@ -38,6 +38,20 @@ export const decodeObjectFromReactAdmin = (
 });
 
 /**
+ * Converts a list of Data object from React Admin style to Feathersjs {e.g. id to _id}
+ * @param obj {{ id: any, [key: string]: any }} object to convert
+ * @param primaryKeyField {string} primaryKey on the featherjs side of things
+ * @returns {ISingleObject[]} {{[key: string]: any}}
+ */
+export const decodeListFromReactAdmin = (
+  objList: IReactAdminDataObject[],
+  primaryKeyField: string = 'id',
+): ISingleObject[] =>
+  objList.map((obj: IReactAdminDataObject) =>
+    decodeObjectFromReactAdmin(obj, primaryKeyField),
+  );
+
+/**
  * Converts an array of objects from Featherjs style to React Admin style e.g. _id to id
  * @param data { [{[primaryKeyField]: any, [key: string]: any}] } array of objects to convert
  * @param primaryKeyField {string} primaryKey on the featherjs side of things
