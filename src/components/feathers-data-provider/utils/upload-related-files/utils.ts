@@ -1,4 +1,4 @@
-import isFileInputValueEmpty from '../is-file-input-value-empty';
+import hasOnlyFiles from '../has-only-files';
 
 export const isUploadsResource = (resource: string, uploadsUrl: string) =>
   uploadsUrl.split('/').reverse()[0] === resource;
@@ -10,7 +10,7 @@ export const shouldUploadFiles = (
 ): boolean => {
   const uploadableField = resourceUploadableFieldMap[resource];
   if (uploadableField) {
-    return !isFileInputValueEmpty(params.data[uploadableField]);
+    return hasOnlyFiles(params.data[uploadableField]);
   }
   return false;
 };

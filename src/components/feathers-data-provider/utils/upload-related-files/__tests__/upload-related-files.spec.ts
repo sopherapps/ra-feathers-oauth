@@ -22,20 +22,33 @@ describe('upload-related-files', () => {
 
     describe('shouldUploadFiles', () => {
       const resource = 'churches';
+      const dummyFile = new File([''], 'dummy', { type: 'text/pdf' });
       const params = {
         data: {
-          logo: 'some-stuff',
+          logo: dummyFile,
         },
       };
       const resourceUploadableFieldMap = {
         [resource]: 'logo',
       };
 
-      it('returns true if the resource has a a field in the resourceUploadableFieldMap\
-      and that field has a value in params.data', () => {
+      it('returns true if the resource has a field in the resourceUploadableFieldMap\
+      and that field has a File value in params.data', () => {
         expect(
           shouldUploadFiles(resource, params, resourceUploadableFieldMap),
         ).toBe(true);
+      });
+
+      it('returns false if the resource has a field in the resourceUploadableFieldMap\
+      and that field has a value that is neither a File nor array of Files in params.data', () => {
+        const nonFileData = {
+          data: {
+            logo: 'some-stuff',
+          },
+        };
+        expect(
+          shouldUploadFiles(resource, nonFileData, resourceUploadableFieldMap),
+        ).toBe(false);
       });
 
       it('returns false if the value of the uploadable field params.data is undefined', () => {
@@ -164,6 +177,7 @@ describe('upload-related-files', () => {
         ),
       ).resolves.toEqual(expect.arrayContaining(fileLastModifiedValues));
     });
+
     it('returns a forerignKey of the uploaded file\
     if a single file was passed to it', async () => {
       const file = { ...dummyFile, rawFile: dummyFile };

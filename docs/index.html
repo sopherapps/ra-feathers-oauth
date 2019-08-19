@@ -914,7 +914,7 @@ img { max-width: 100%; }
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<h1 id="ra-feathers-oauth-build-status-coverage-status">ra-feathers-oauth <a href="https://travis-ci.org/sopherapps/ra-feathers-oauth"><img src="https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master"><img src="https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master" alt="Coverage Status"></a></h1>
+			<h1 id="ra-feathersjs-oauth-build-status-coverage-status">ra-feathersjs-oauth <a href="https://travis-ci.org/sopherapps/ra-feathers-oauth"><img src="https://travis-ci.org/sopherapps/ra-feathers-oauth.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/sopherapps/ra-feathers-oauth?branch=master"><img src="https://coveralls.io/repos/github/sopherapps/ra-feathers-oauth/badge.svg?branch=master" alt="Coverage Status"></a></h1>
 			<p>This provides a <code>data-provider</code> and an <code>auth-provider</code> for the your <a href="https://marmelab.com/react-admin">react admin</a> app connecting it to a <a href="https://crow.docs.feathersjs.com/">feathersjs 4</a> app.</p>
 			<p><strong>Note however, that it can be used even without react-admin.</strong></p>
 			<h2 id="installation">Installation</h2>
@@ -952,7 +952,7 @@ img { max-width: 100%; }
 
 <span class="hljs-keyword">import</span> GoogleLogin <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/screens/GoogleLogin"</span>;
 
-<span class="hljs-keyword">import</span> {feathersDataProvider, feathersAuthProvider, createFeathersClient} <span class="hljs-keyword">from</span> <span class="hljs-string">"ra-feathers-oauth"</span>;
+<span class="hljs-keyword">import</span> {createFeathersDataProvider, createFeathersAuthProvider, createFeathersClient} <span class="hljs-keyword">from</span> <span class="hljs-string">"ra-feathersjs-oauth"</span>;
 
 <span class="hljs-keyword">import</span> PostIcon <span class="hljs-keyword">from</span> <span class="hljs-string">"@material-ui/icons/Send"</span>;
 <span class="hljs-keyword">import</span> UserIcon <span class="hljs-keyword">from</span> <span class="hljs-string">"@material-ui/icons/Group"</span>;
@@ -963,7 +963,7 @@ img { max-width: 100%; }
   <span class="hljs-attr">storageKey</span>: <span class="hljs-string">"a-unique-storage-key"</span>
 });
 
-<span class="hljs-keyword">const</span> dataProvider = feathersDataProvider(feathersClient, {
+<span class="hljs-keyword">const</span> dataProvider = createFeathersDataProvider(feathersClient, {
   <span class="hljs-attr">uploadsUrl</span>: <span class="hljs-string">`<span class="hljs-subst">${apiUrl}</span>/uploads`</span>,
   <span class="hljs-attr">multerFieldNameSetting</span>: <span class="hljs-string">"files"</span>,
   <span class="hljs-attr">resourceUploadsForeignKeyMap</span>: { <span class="hljs-attr">posts</span>: <span class="hljs-string">"_id"</span>, <span class="hljs-attr">uploads</span>: <span class="hljs-string">"url"</span> },
@@ -979,7 +979,7 @@ img { max-width: 100%; }
   UPDATE,
   UPDATE_MANY
 });
-<span class="hljs-keyword">const</span> authProvider = feathersAuthProvider(feathersClient, {
+<span class="hljs-keyword">const</span> authProvider = createFeathersAuthProvider(feathersClient, {
   <span class="hljs-attr">permissionsField</span>: <span class="hljs-string">"permissions"</span>,
   <span class="hljs-attr">oauthStrategy</span>: <span class="hljs-string">"google"</span>,
   AUTH_CHECK,
@@ -1083,7 +1083,7 @@ export default connect(
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_requests_update_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/requests/update"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_requests_update_many_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/requests/update-<wbr>many"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_generate_query_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/generate-<wbr>query"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_is_file_input_value_empty_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/is-<wbr>file-<wbr>input-<wbr>value-<wbr>empty"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_has_only_files_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/has-<wbr>only-<wbr>files"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_ra_feathers_transpiler_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/ra-<wbr>feathers-<wbr>transpiler"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_upload_related_files_index_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/upload-<wbr>related-<wbr>files/index"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_components_feathers_data_provider_utils_upload_related_files_upload_files_.html" class="tsd-kind-icon">"components/feathers-<wbr>data-<wbr>provider/utils/upload-<wbr>related-<wbr>files/upload-<wbr>files"</a></li>
