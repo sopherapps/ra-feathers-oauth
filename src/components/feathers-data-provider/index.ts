@@ -1,5 +1,6 @@
 import { IFeathersClient } from '../../types/feathers-client';
 import create from './requests/create';
+import createMany from './requests/create-many';
 import _delete from './requests/delete';
 import deleteMany from './requests/delete-many';
 import getList from './requests/get-list';
@@ -17,6 +18,7 @@ export interface IFeathersDataProviderConfig {
   resourcePrimaryKeyFieldMap?: { [key: string]: string };
   defaultPrimaryKeyField?: string;
   CREATE?: string;
+  CREATE_MANY?: string;
   DELETE?: string;
   DELETE_MANY?: string;
   GET_LIST?: string;
@@ -52,7 +54,7 @@ export default (
     resourcePrimaryKeyFieldMap = {},
     defaultPrimaryKeyField = 'id',
     CREATE = 'CREATE',
-    // CREATE_MANY = 'CREATE_MANY',
+    CREATE_MANY = 'CREATE_MANY',
     DELETE = 'DELETE',
     DELETE_MANY = 'DELETE_MANY',
     GET_LIST = 'GET_LIST',
@@ -120,14 +122,14 @@ export default (
           IUploadsConfig,
         );
 
-      // case CREATE_MANY:
-      //   return await createMany(
-      //     app,
-      //     resource,
-      //     params,
-      //     primaryKeyField,
-      //     IUploadsConfig,
-      //   );
+      case CREATE_MANY:
+        return await createMany(
+          app,
+          resource,
+          params,
+          primaryKeyField,
+          IUploadsConfig,
+        );
 
       case DELETE:
         return await _delete(app, resource, params, primaryKeyField);

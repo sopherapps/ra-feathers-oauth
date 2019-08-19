@@ -1,7 +1,9 @@
 import { IFeathersClient } from '../../../../../types/feathers-client';
 import createFeathersClient from '../../../../create-feathers-client';
-import uploadRealtedFiles from '../index';
-import uploadRelatedFiles from '../index';
+import {
+  uploadRelatedFiles,
+  uploadRelatedFilesForMultipleObjects,
+} from '../index';
 import uploadFiles from '../upload-files';
 import { isUploadsResource, shouldUploadFiles } from '../utils';
 
@@ -184,7 +186,7 @@ describe('upload-related-files', () => {
     });
   });
 
-  describe('upload-related-files default import', () => {
+  describe('uploadRelatedFiles', () => {
     const resource = 'churches';
     const dataProviderOptions = {
       uploadsUrl: 'http://localhost:3030/uploads',
@@ -366,6 +368,167 @@ describe('upload-related-files', () => {
           ...dataProviderOptions,
           resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
         }),
+      ).resolves.toMatchObject(params.data);
+    });
+  });
+
+  describe('uploadRelatedFilesForMultipleObjects', () => {
+    const resource = 'churches';
+    const dataProviderOptions = {
+      uploadsUrl: 'http://localhost:3030/uploads',
+      multerFieldNameSetting: 'files',
+      resourcePrimaryKeyFieldMap: {},
+      resourceUploadsForeignKeyMap: { [resource]: 'url' },
+      resourceUploadableFieldMap: { [resource]: 'logo' },
+      defaultPrimaryKeyField: 'id',
+    };
+    const apiUrl = 'http://localhost:3000';
+    let feathersClient: IFeathersClient;
+    const originalFetch = window.fetch;
+    const mockFetch = jest.fn(async (url, options) => ({
+      json: async () => options.body && Array.from(options.body.values()),
+    }));
+    const dummyFile = new File([''], 'duumy-file', { type: 'text/html' });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // @ts-ignore
+      window.fetch = mockFetch;
+      feathersClient = createFeathersClient(apiUrl);
+
+      // @ts-ignore
+      feathersClient.authentication.getAccessToken = jest.fn(
+        () => 'some-random-token',
+      );
+    });
+
+    afterEach(() => {
+      window.fetch = originalFetch;
+    });
+
+    it('returns params.data (an array) with the uploadable field for each object replaced\
+    by the array of the foreignkeys of the uploaded files', async () => {
+      const files = [1, 2, 3].map(() => ({ ...dummyFile, rawFile: dummyFile }));
+      const districts = ['Kampala', 'Wakiso', 'Entebbe', 'Jinja'];
+      const filesForEachDistrict = {
+        [districts[0]]: files[1],
+        [districts[1]]: undefined,
+        [districts[2]]: [files[2], files[2], files[0]],
+        [districts[3]]: [],
+      };
+
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: districts.map((district: string) => ({
+          [uploadableField]: filesForEachDistrict[district],
+          district,
+          name: `All Saints Cathedral, ${district}`,
+          address: `${district} town`,
+        })),
+      };
+
+      const getForeignKeys = (value: any, foreignKey: string): any => {
+        if (Array.isArray(value)) {
+          // return empty array if value is an empty array
+          if (JSON.stringify(value) === JSON.stringify([])) {
+            return [];
+          }
+          // this recurssion would be trouble if we had arrays of arrays
+          return value.map((obj: any) => getForeignKeys(obj, foreignKey));
+        }
+        return value && value.rawFile && value.rawFile[foreignKey];
+      };
+
+      const expectedResponseForFileNames = params.data.map((datum: any) => ({
+        ...datum,
+        [uploadableField]: getForeignKeys(
+          filesForEachDistrict[datum.district],
+          'name',
+        ),
+      }));
+
+      const expectedResponseForLastModified = params.data.map((datum: any) => ({
+        ...datum,
+        [uploadableField]: getForeignKeys(
+          filesForEachDistrict[datum.district],
+          'lastModified',
+        ),
+      }));
+
+      await expect(
+        uploadRelatedFilesForMultipleObjects(
+          feathersClient,
+          resource,
+          params,
+          '_id',
+          {
+            ...dataProviderOptions,
+            resourceUploadsForeignKeyMap: { [resource]: 'name' },
+          },
+        ),
+      ).resolves.toEqual(expect.arrayContaining(expectedResponseForFileNames));
+
+      await expect(
+        uploadRelatedFilesForMultipleObjects(
+          feathersClient,
+          resource,
+          params,
+          '_id',
+          {
+            ...dataProviderOptions,
+            resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+          },
+        ),
+      ).resolves.toMatchObject(expectedResponseForLastModified);
+    });
+
+    it('returns the original params.data if resource has no uploadable field', async () => {
+      const files = [1, 2, 3].map(() => ({ ...dummyFile, rawFile: dummyFile }));
+      const districts = ['Kampala', 'Wakiso', 'Entebbe'];
+      const filesForEachDistrict = {
+        [districts[0]]: files[1],
+        [districts[1]]: [files[0], files[2]],
+        [districts[2]]: [files[2], files[2], files[0]],
+      };
+
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+      const params = {
+        data: districts.map((district: string) => ({
+          [uploadableField]: filesForEachDistrict[district],
+          district,
+          name: `All Saints Cathedral, ${district}`,
+          address: `${district} town`,
+        })),
+      };
+
+      await expect(
+        uploadRelatedFilesForMultipleObjects(
+          feathersClient,
+          resource,
+          params,
+          '_id',
+          {
+            ...dataProviderOptions,
+            resourceUploadsForeignKeyMap: { [resource]: 'name' },
+            resourceUploadableFieldMap: { [`${resource}extra`]: 'logo' },
+          },
+        ),
+      ).resolves.toMatchObject(params.data);
+
+      await expect(
+        uploadRelatedFilesForMultipleObjects(
+          feathersClient,
+          resource,
+          params,
+          '_id',
+          {
+            ...dataProviderOptions,
+            resourceUploadsForeignKeyMap: { [resource]: 'lastModified' },
+            resourceUploadableFieldMap: { [`${resource}extra`]: 'logo' },
+          },
+        ),
       ).resolves.toMatchObject(params.data);
     });
   });

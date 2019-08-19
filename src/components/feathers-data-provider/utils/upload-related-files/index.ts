@@ -21,7 +21,7 @@ export interface IUploadsConfig {
  * @param IUploadsConfig {IUploadsConfig}
  * @returns { Promise<any>}
  */
-export default async (
+export const uploadRelatedFiles = async (
   app: IFeathersClient,
   resource: string,
   params: { [key: string]: any },
@@ -52,3 +52,29 @@ export default async (
   }
   return { ...params.data };
 };
+
+export const uploadRelatedFilesForMultipleObjects = async (
+  app: IFeathersClient,
+  resource: string,
+  params: { [key: string]: any },
+  primaryKeyField: string,
+  uploadsConfig: IUploadsConfig,
+): Promise<any> => {
+  if (Array.isArray(params.data)) {
+    let response = [];
+    for (let datum of params.data) {
+      const tmp = await uploadRelatedFiles(
+        app,
+        resource,
+        { ...params, data: datum },
+        primaryKeyField,
+        uploadsConfig,
+      );
+      response.push(tmp);
+    }
+    return response;
+  }
+  return params.data;
+};
+
+export default uploadRelatedFiles;
