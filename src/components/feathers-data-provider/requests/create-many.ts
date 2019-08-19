@@ -29,17 +29,17 @@ export default async (
   resource: string,
   params: { [key: string]: any },
   primaryKeyField: string,
-  IUploadsConfig: IUploadsConfig,
+  uploadsConfig: IUploadsConfig,
 ): Promise<{ data: IReactAdminDataObject[] }> => {
   const data = await uploadRelatedFilesForMultipleObjects(
     app,
     resource,
     params,
     primaryKeyField,
-    IUploadsConfig,
+    uploadsConfig,
   );
 
-  if (isUploadsResource(resource, IUploadsConfig.uploadsUrl)) {
+  if (isUploadsResource(resource, uploadsConfig.uploadsUrl)) {
     // return the same data got from uploading the files
     // some uploads always return arrays, though
     return convertListDataToReactAdminType(data, primaryKeyField);

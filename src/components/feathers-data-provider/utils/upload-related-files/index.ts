@@ -61,8 +61,8 @@ export const uploadRelatedFilesForMultipleObjects = async (
   uploadsConfig: IUploadsConfig,
 ): Promise<any> => {
   if (Array.isArray(params.data)) {
-    let response = [];
-    for (let datum of params.data) {
+    const response = [];
+    for (const datum of params.data) {
       const tmp = await uploadRelatedFiles(
         app,
         resource,
