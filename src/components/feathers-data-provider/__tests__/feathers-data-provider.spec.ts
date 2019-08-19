@@ -8,7 +8,9 @@ import {
 
 jest.mock('../../../components/feathers-data-provider/utils/generate-query');
 import generateQuery from '../utils/generate-query';
-import uploadRelatedFiles from '../utils/upload-related-files';
+import uploadRelatedFiles, {
+  uploadRelatedFilesForMultipleObjects,
+} from '../utils/upload-related-files';
 const actualGenerateQuery = jest.requireActual(
   '../../../components/feathers-data-provider/utils/generate-query',
 ).default;
@@ -420,6 +422,99 @@ describe('feathers-data-provider', () => {
 
         expect(response).toMatchObject(
           convertSingleDatumToReactAdminType(
+            expectedResponse,
+            dataProviderOptions.defaultPrimaryKeyField,
+          ),
+        );
+      });
+    });
+  });
+
+  describe('type: CREATE_MANY', () => {
+    beforeEach(() => {
+      feathersClient.service(resource).create = jest.fn(
+        async (data: any) => data,
+      );
+    });
+
+    it('outputs {data: feathersjsClient.service(resource).create(data)} which is a list of objects\
+    with uploadable field updated to the foreignKey of their corresponding uploaded file', async () => {
+      const uploadableField =
+        dataProviderOptions.resourceUploadableFieldMap[resource];
+
+      const params = {
+        data: [
+          { name: 'John Doe', [uploadableField]: file },
+          { name: 'Jane Doe', [uploadableField]: [file, file] },
+          { name: 'Paul Doe', [uploadableField]: [] },
+          { name: 'Dorothy Doe', [uploadableField]: undefined },
+        ],
+      };
+
+      const getForeignKeys = (value: any, foreignKey: string): any => {
+        if (Array.isArray(value)) {
+          // return empty array if value is an empty array
+          if (JSON.stringify(value) === JSON.stringify([])) {
+            return [];
+          }
+          // this recurssion would be trouble if we had arrays of arrays
+          return value.map((obj: any) => getForeignKeys(obj, foreignKey));
+        }
+        return value && value.rawFile && value.rawFile[foreignKey];
+      };
+
+      const response = await feathersDataProvider(
+        DATA_PROVIDER_ACTIONS.CREATE_MANY,
+        resource,
+        params,
+      );
+      const expectedResponse = await feathersClient
+        .service(resource)
+        .create(params.data);
+
+      expect(response).toMatchObject(
+        convertListDataToReactAdminType(
+          expectedResponse.map((datum: any) => ({
+            ...datum,
+            [uploadableField]: getForeignKeys(
+              datum[uploadableField],
+              dataProviderOptions.resourceUploadsForeignKeyMap[resource],
+            ),
+          })),
+          dataProviderOptions.defaultPrimaryKeyField,
+        ),
+      );
+    });
+
+    describe('uploads', () => {
+      it('outputs response from the multiple upload if the resource is the same as the one on the uploadsUrl', async () => {
+        const uploadableField =
+          dataProviderOptions.resourceUploadableFieldMap[uploadsResource];
+
+        const params = {
+          data: [
+            { title: 'John Doe photo', [uploadableField]: file },
+            { title: 'Jane Doe photo', [uploadableField]: [file, file] },
+            { title: 'Paul Doe photo', [uploadableField]: [] },
+            { title: 'Dorothy Doe photo', [uploadableField]: undefined },
+          ],
+        };
+
+        const response = await feathersDataProvider(
+          DATA_PROVIDER_ACTIONS.CREATE_MANY,
+          uploadsResource,
+          params,
+        );
+        const expectedResponse = await uploadRelatedFilesForMultipleObjects(
+          feathersClient,
+          uploadsResource,
+          params,
+          dataProviderOptions.defaultPrimaryKeyField,
+          dataProviderOptions,
+        );
+
+        expect(response).toMatchObject(
+          convertListDataToReactAdminType(
             expectedResponse,
             dataProviderOptions.defaultPrimaryKeyField,
           ),
