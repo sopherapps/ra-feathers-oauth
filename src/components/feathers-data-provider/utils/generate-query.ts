@@ -23,8 +23,8 @@ export default (
   let query: any = {};
   query = { ...decodeObjectFromReactAdmin(filter, primaryKeyField) };
 
-  if (query.hasOwnProperty('q') && ['', undefined, null].includes(query['q'])) {
-    delete query['q'];
+  if (query.hasOwnProperty('q') && ['', undefined, null].includes(query.q)) {
+    delete query.q;
   }
 
   if (Array.isArray(ids)) {
