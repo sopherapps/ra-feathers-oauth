@@ -20,8 +20,12 @@ export default (
   },
   primaryKeyField = 'id',
 ) => {
-  let query = {};
+  let query: any = {};
   query = { ...decodeObjectFromReactAdmin(filter, primaryKeyField) };
+
+  if (query.hasOwnProperty('q') && ['', undefined, null].includes(query['q'])) {
+    delete query['q'];
+  }
 
   if (Array.isArray(ids)) {
     query = { ...query, [primaryKeyField]: { $in: ids } };
