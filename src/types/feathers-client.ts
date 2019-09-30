@@ -36,16 +36,16 @@ export interface IService {
     id: string | number | null,
     data: any,
     params?: IParams,
-  ) => Promise<{ [key: string]: any } | { [key: string]: any }[]>;
+  ) => Promise<{ [key: string]: any } | Array<{ [key: string]: any }>>;
   patch: (
     id: string | number | null,
     data: any,
     params?: IParams,
-  ) => Promise<{ [key: string]: any } | { [key: string]: any }[]>;
+  ) => Promise<{ [key: string]: any } | Array<{ [key: string]: any }>>;
   remove: (
     id: string | number | null,
     params?: IParams,
-  ) => Promise<{ [key: string]: any } | { [key: string]: any }[]>;
+  ) => Promise<{ [key: string]: any } | Array<{ [key: string]: any }>>;
 }
 
 export enum ClientTypes {
