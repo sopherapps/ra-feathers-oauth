@@ -2,6 +2,8 @@
 
 This provides a `data-provider` and an `auth-provider` for the your [react admin](https://marmelab.com/react-admin) app connecting it to a [feathersjs 4](https://crow.docs.feathersjs.com/) app.
 
+__THIS PACKAGE IS NO LONGER BEING MAINTAINED__
+
 __Note however, that it can be used even without react-admin.__
 
 ## Installation
